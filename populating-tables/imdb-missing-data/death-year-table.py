@@ -1,5 +1,3 @@
-#dth_year_regex = re.compile("<th scope=\"row\">Died</th>\\\\n<td>{}{}{}{}{}".format(month,separator,date,separator,year))
-
 import re
 import sys
 import urllib
@@ -30,24 +28,13 @@ def check(wiki, regex):
 		print("fail")
 	sys.exit(0)
 
-
-
 month = "(January|February|March|April|May|June|July|August|September|October|November|December)"
 year = "([0-9]{4})"
 date = "([0-9]{1,2})"
 separator = "(,|;|\s|&#160;)+"
-middlebar = "(–|-|\\\\xe2\\\\x80\\\\x93)+"
 
 re.DOTALL
-dth_year_regex_1 = re.compile("\\({}{}{}{}{}{}{}{}{}{}{}{}{}\\)".format(month,separator,date,separator,year,separator,middlebar,separator,month,separator,date,separator,year))
-dth_year_regex_2 = re.compile("\\({}{}{}{}{}{}{}{}{}{}{}{}{}\\)".format(month,separator,date,separator,year,separator,middlebar,separator,date,separator,month,separator,year))
-dth_year_regex_3 = re.compile("\\({}{}{}{}{}{}{}{}{}{}{}{}{}\\)".format(date,separator,month,separator,year,separator,middlebar,separator,month,separator,date,separator,year))
-dth_year_regex_4 = re.compile("\\({}{}{}{}{}{}{}{}{}{}{}{}{}\\)".format(date,separator,month,separator,year,separator,middlebar,separator,date,separator,month,separator,year))
-
-#born May 2, 1972
-born_year_1 = re.compile(".*(born){}{}{}{}{}{}".format(separator,month,separator,date,separator,year))
-born_year_2 = re.compile(".*born{}{}{}{}{}{}".format(separator,date,separator,month,separator,year))
-
+dth_year_regex = re.compile("<th scope=\"row\">Died</th>\\\\n<td>{}{}{}{}{}".format(month,separator,date,separator,year))
 
 res = []
 
@@ -55,7 +42,7 @@ chunksize = 10**4
 
 output_file = open("testfile.csv", "ab")
 
-for data in pd.read_csv("~/btech/sem 6/dbms-2/project-dataset/name.basics.tsv", skiprows=30, chunksize=chunksize, delimiter='\t'):
+for data in pd.read_csv("~/btech/sem-6/dbms-2/project-dataset/name.basics.tsv", skiprows=30, chunksize=chunksize, delimiter='\t'):
 	col = np.array(data)
 	# np.savetxt(output_file,col,fmt="%s",delimiter="\t")
 	
@@ -85,25 +72,7 @@ for data in pd.read_csv("~/btech/sem 6/dbms-2/project-dataset/name.basics.tsv", 
 
 			#birth and death
 			print ("checking 1st")
-			x = dth_year_regex_1.findall(soup_string)
-			if len(x) != 0:
-				print("Death year of ",name," :: ",x[-1])
-				continue
-
-			print ("checking 2nd")
-			x = dth_year_regex_2.findall(soup_string)
-			if len(x) != 0:
-				print("Death year of ",name," :: ",x[-1])
-				continue
-
-			print ("checking 3rd")
-			x = dth_year_regex_3.findall(soup_string)
-			if len(x) != 0:
-				print("Death year of ",name," :: ",x[-1])
-				continue
-
-			print ("checking 4th")
-			x = dth_year_regex_4.findall(soup_string)
+			x = dth_year_regex.findall(soup_string)
 			if len(x) != 0:
 				print("Death year of ",name," :: ",x[-1])
 				continue
