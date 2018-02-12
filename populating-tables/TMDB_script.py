@@ -1,24 +1,25 @@
 import sys
 import tmdbsimple as tmdb
 import pandas as pd
+import numpy as np
 import json
+import signal
 
-tmdb.API_KEY = '6b0c1e9b775e0a29bee614bd9086bf54'
-
-data = pd.read_csv('title.basics.tsv', sep='\t', na_values='\\N', low_memory=False)
+cat = sys.argv[1]
+start = int(sys.argv[2])
+end = int(sys.argv[3])
+tmdb.API_KEY = sys.argv[4]
 
 def get_data(imdb_id):
     obj = tmdb.base.TMDB()
     path = 'find/{}?api_key={}&external_source=imdb_id'.format(imdb_id, tmdb.API_KEY)
     return obj._GET(path=path)
 
-cat = sys.argv[1]
-ids = data[data.loc[:,'titleType'] == cat]['tconst'].values
-del data
+ids = np.genfromtxt('{}_list'.format(cat), dtype=str).tolist()
 
 jsons = []
 
-for cur_id in ids:
+for cur_id in ids[start:end]:
     try:
         key = 'movie_results' if cat == 'movie' else 'tv_results'
         inter = get_data(cur_id)[key]
@@ -60,6 +61,11 @@ for cur_id in ids:
         print("At {}: {}".format(cur_id, e))
         continue
     print('Done with {}'.format(cur_id))
-    
+
+    if len(jsons) % 100 == 0:
+        print("Autosave....")
+        re_data = pd.io.json.json_normalize(jsons)
+        re_data.to_csv('{}_data_{}_{}.tsv'.format(cat, start, end), sep='\t', na_rep='\\N')
+
 re_data = pd.io.json.json_normalize(jsons)
-re_data.to_csv('{}_data.tsv'.format(cat), sep='\t', na_rep='\\N')
+re_data.to_csv('{}_data_{}_{}.tsv'.format(cat, start, end), sep='\t', na_rep='\\N')
