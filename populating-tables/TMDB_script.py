@@ -15,7 +15,7 @@ def get_data(imdb_id):
     path = 'find/{}?api_key={}&external_source=imdb_id'.format(imdb_id, tmdb.API_KEY)
     return obj._GET(path=path)
 
-ids = np.genfromtxt('{}_list'.format(cat), dtype=str).tolist()
+ids = np.genfromtxt('IMDB-ID_{}_list'.format(cat), dtype=str).tolist()
 
 jsons = []
 
