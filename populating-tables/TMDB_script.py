@@ -17,7 +17,7 @@ def get_data(imdb_id):
 
 ids = set(np.genfromtxt('IMDB-ID_{}_list'.format(cat), dtype=str).tolist())
 exist_ids = set(np.genfromtxt('TMDB_data_from_kaggle.csv', dtype=str).tolist())
-ids = list(ids - exist_ids)
+ids = sorted(list(ids - exist_ids))
 
 jsons = []
 
