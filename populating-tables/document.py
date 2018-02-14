@@ -21,6 +21,30 @@ def func(arr):
 				# print ("Inside 2nd else")
 				return [x['name'] for x in xy]
 
+import pandas as pd
+imdb = pd.read_csv("./title.basics_episode.tsv", sep='\t', na_values="\\N", low_memory=False)
+
+
+def split(arr):
+	if arr["genres"]=="genres" or arr["genres"]=="" or arr["genres"]=="\\N" or (not isinstance(arr["genres"], str)):
+		# print ("Inside 1st if")
+		genre_dict["tconst"].append(arr["tconst"])
+		genre_dict["genre"].append("\\N")
+	else:
+		genre = [x.strip() for x in arr["genres"].split(',')]
+		for y in genre:
+			genre_dict["tconst"].append(arr["tconst"])
+			genre_dict["genre"].append(y)
+
+
+
+genre_dict = {'tconst':[], 'genre':[]}
+
+imdb.apply(split, axis=1)
+x = pd.DataFrame(genre_dict, columns=sorted(genre_dict.keys(), reverse=True))
+x.to_csv("./title.genre.tsv",sep='\t',na_rep='\\N', index=False, header=["tconst","genre"])
+
+
 
 #dj = pd.read_csv("./combined.csv", sep='\t', na_values="\\N", low_memory=False)
 
