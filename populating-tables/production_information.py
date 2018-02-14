@@ -10,16 +10,13 @@ cur_db_to_records = cur_db.to_records()
 companies_dict = {'tconst': [], 'CompanyID': [], 'CompanyName': []}
 countries_dict = {'tconst': [], 'CountryName': []}
 
-order_dict = {}
 ID = cur_db.columns.tolist().index('tconst') + 1
 COMP = cur_db.columns.tolist().index('production_companies') + 1
 COUN = cur_db.columns.tolist().index('production_countries') + 1
 
 for rec in cur_db_to_records:
     # Company processing
-    if rec[COMP] == "\\N":
-        continue
-    else:
+    if rec[COMP] != "\\N":
         json_obj = ast.literal_eval(rec[COMP])
         if isinstance(json_obj, list):
             for indi in json_obj:
@@ -32,9 +29,7 @@ for rec in cur_db_to_records:
             companies_dict['CompanyName'].append(json_obj['name'])
 
     # Country processing
-    if rec[COUN] == "\\N":
-        continue
-    else:
+    if rec[COUN] != "\\N":
         json_obj = ast.literal_eval(rec[COUN])
         if isinstance(json_obj, list):
             for indi in json_obj:
