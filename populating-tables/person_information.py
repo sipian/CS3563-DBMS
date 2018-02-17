@@ -21,4 +21,4 @@ for rec in cur_db_to_records:
     person_dict['DeathYear'].append(rec[DEATH])
 
 persons = pd.DataFrame(person_dict, columns=sorted(person_dict.keys(), reverse=True))
-persons.to_csv('./title.person.tsv', sep='\t', na_rep="\\N", index=False, header=['PersonName', 'PersonID', 'DeathYear', 'BirthYear'])
+persons.to_csv('./title.person.csv', sep=',', na_rep="\\N", index=False, header=['PersonName', 'PersonID', 'DeathYear', 'BirthYear'])
