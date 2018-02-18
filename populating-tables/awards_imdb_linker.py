@@ -1,3 +1,4 @@
+import sys
 import pandas as pd
 import numpy as np
 
@@ -5,8 +6,41 @@ import numpy as np
 List of all ignored categories (for now)
 '''
 
+if sys.argv[1] is not None:
+    # Clean up block
+    CUR_DB = sys.argv[1]
+    cur_db = pd.read_csv(CUR_DB, sep=',', low_memory=False)
+    del cur_db['Ceremony']
+    cur_db['AwardOrganization'] = pd.Series(['Academy of Motion Picture Arts and Sciences'] * len(cur_db),
+                                            index=cur_db.index)
+    cur_db['AwardID'] = pd.Series(['aw'] * len(cur_db), index=cur_db.index)
+    cur_db.rename(columns={
+                            'tconst': 'PictureID',
+                            'nconst': 'PersonID',
+                            'Award': 'AwardName'
+                          },
+                  inplace=True)
+
+    # Provide Award IDs
+    # ID generation: awo<company_id>c<category_id>y<year>
+    award_cats = sorted(list(set(cur_db['AwardName'])))
+    for i in range(0, len(cur_db)):
+        cur_db.at[i, 'Year'] = cur_db.at[i, 'Year'][:4]
+        cur_db.at[i, 'AwardID'] = 'awo{0}c{1}y{2}'.format(0,
+                                                          award_cats.index(cur_db.at[i, 'AwardName']),
+                                                          cur_db.at[i, 'Year'])
+
+    tid_list = np.genfromtxt('PictureID_list.txt', dtype=str).tolist()
+    nid_list = np.genfromtxt('PersonID_list.txt', dtype=str).tolist()
+
+    cur_db = cur_db.loc[(cur_db['PictureID'].isin(tid_list)) | (cur_db['PersonID'].isin(nid_list))]
+    cur_db.to_csv('awards.basics.csv', sep=',',
+                  columns=['AwardID', 'AwardName', 'AwardOrganization', 'PictureID',
+                           'PersonID', 'Winner', 'Year'], index=False)
+    sys.exit(0)
+
 actor_category = ["Actor", "Actress", "Actor in a Supporting Role", "Actress in a Supporting Role",
-                  "Actor in a Leading Role", "Actress in a Leading Role","Directing (Comedy Picture)","Directing (Dramatic Picture)","Film Editing","Special Award", "Honoary Award", "Jean Hersholt Humanitarian Award", "Irving G. Thalberg Memorial Award","Writing (Title Writing)"]
+                  "Actor in a Leading Role", "Actress in a Leading Role","Directing (Comedy Picture)","Directing (Dramatic Picture)","Film Editing","Special Award", "Honorary Award", "Jean Hersholt Humanitarian Award", "Irving G. Thalberg Memorial Award","Writing (Title Writing)"]
 ignore_category = ["Art Direction"
                    , "Special Effects"
                    , "Art Direction (Black and White)"
