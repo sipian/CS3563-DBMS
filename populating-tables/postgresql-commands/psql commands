@@ -1,0 +1,83 @@
+create table person ( 
+	PersonID varchar primary key,
+	PersonName varchar,
+	BirthYear varchar,
+	DeathYear varchar
+);
+COPY person FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.person.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+
+create table picture (
+	PictureID varchar primary key,
+	PrimaryTitle varchar,
+	OriginalTitle varchar,
+	Adult varchar,
+	StartYear varchar,
+	EndYear varchar,
+	Duration varchar,
+	Budget varchar,
+	GrossBoxOffice varchar,
+	ParentPicture varchar,
+	SeasonNumber varchar,
+	EpisodeNumber varchar
+);
+COPY picture FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.basics_episode_final.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+
+create table role (
+	PictureID varchar references picture(PictureID),
+	PersonID varchar references person(PersonID),
+	Role varchar
+);
+COPY role FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.principals_required.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+
+create table awards(
+	AwardID varchar,
+	AwardName varchar,
+	AwardOrganization varchar,
+	PictureID varchar references picture(PictureID),
+	PersonID varchar references person(PersonID),
+	Winner varchar,
+	Year varchar
+);
+COPY awards FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/awards.basics.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+
+create table awards(
+	AwardID varchar,
+	AwardName varchar,
+	AwardOrganization varchar,
+	PictureID varchar references picture(PictureID),
+	PersonID varchar references person(PersonID),
+	Winner varchar,
+	Year varchar
+);
+COPY awards FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/awards.basics.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+
+create table languages (
+	PictureID varchar references picture(PictureID),
+	Language varchar
+);
+COPY languages FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.languages.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+
+create table production_company (
+	PictureID varchar references picture(PictureID),
+	CompanyName varchar,
+	CompanyID varchar
+);
+COPY production_company FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.production_comp.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+
+create table filming_location (
+	PictureID varchar references picture(PictureID),
+	CountryName varchar
+);
+COPY filming_location FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.filming_location.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+
+create table release_location (
+	PictureID varchar references picture(PictureID),
+	Region varchar
+);
+COPY release_location FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.release_location.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+
+create table genres (
+	PictureID varchar references picture(PictureID),
+	Genre varchar
+);
+COPY genres FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.genre.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
