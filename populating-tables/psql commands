@@ -1,0 +1,33 @@
+create table person ( 
+	PersonName varchar,
+	PersonID varchar primary key,
+	DeathYear varchar,
+	BirthYear varchar
+);
+
+
+create table picture (
+	PictureID varchar primary key,
+	PrimaryTitle varchar,
+	OriginalTitle varchar,
+	Adult varchar,
+	StartYear varchar,
+	EndYear varchar,
+	Duration varchar,
+	Budget varchar,
+	GrossBoxOffice varchar,
+	ParentPicture varchar,
+	SeasonNumber varchar,
+	EpisodeNumber varchar
+);
+
+create table role (
+	PictureID varchar references picture(PictureID),
+	PersonID varchar references person(PersonID),
+	Role varchar
+);
+
+COPY  FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+
+
+
