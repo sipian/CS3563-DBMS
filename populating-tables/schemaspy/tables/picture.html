@@ -100,7 +100,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </tr>
 </thead>
 <tbody valign='top'>
-<tr class='even'>
+<tr class='odd'>
  <td class='primaryKey' title='Primary Key'>pictureid</td>
  <td class='detail'>bpchar</td>
  <td class='detail' align='right'>9</td>
@@ -109,55 +109,55 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'></td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="awards.pictureid refs picture.pictureid via awards_pictureid_fkey"><a href='awards.html'>awards</a><span class='relatedKey'>.pictureid</span>
     </td>
     <td class='constraint detail'>awards_pictureid_fkey<span title='Cascade on delete:
  Deletion of parent deletes child'>&nbsp;C</span></td>
    </tr>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="filming_location.pictureid refs picture.pictureid via filming_location_pictureid_fkey"><a href='filming_location.html'>filming_location</a><span class='relatedKey'>.pictureid</span>
     </td>
     <td class='constraint detail'>filming_location_pictureid_fkey<span title='Cascade on delete:
  Deletion of parent deletes child'>&nbsp;C</span></td>
    </tr>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="genres.pictureid refs picture.pictureid via genres_pictureid_fkey"><a href='genres.html'>genres</a><span class='relatedKey'>.pictureid</span>
     </td>
     <td class='constraint detail'>genres_pictureid_fkey<span title='Cascade on delete:
  Deletion of parent deletes child'>&nbsp;C</span></td>
    </tr>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="languages.pictureid refs picture.pictureid via languages_pictureid_fkey"><a href='languages.html'>languages</a><span class='relatedKey'>.pictureid</span>
     </td>
     <td class='constraint detail'>languages_pictureid_fkey<span title='Cascade on delete:
  Deletion of parent deletes child'>&nbsp;C</span></td>
    </tr>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="picture.parentpicture refs picture.pictureid via picture_parentpicture_fkey"><a href='picture.html'>picture</a><span class='relatedKey'>.parentpicture</span>
     </td>
     <td class='constraint detail'>picture_parentpicture_fkey<span title='Restrict delete:
  Parent cannot be deleted if children exist'>&nbsp;R</span></td>
    </tr>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="production_company.pictureid refs picture.pictureid via production_company_pictureid_fkey"><a href='production_company.html'>production_company</a><span class='relatedKey'>.pictureid</span>
     </td>
     <td class='constraint detail'>production_company_pictureid_fkey<span title='Cascade on delete:
  Deletion of parent deletes child'>&nbsp;C</span></td>
    </tr>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="rating.pictureid refs picture.pictureid via rating_pictureid_fkey"><a href='rating.html'>rating</a><span class='relatedKey'>.pictureid</span>
     </td>
     <td class='constraint detail'>rating_pictureid_fkey<span title='Cascade on delete:
  Deletion of parent deletes child'>&nbsp;C</span></td>
    </tr>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="release_location.pictureid refs picture.pictureid via release_location_pictureid_fkey"><a href='release_location.html'>release_location</a><span class='relatedKey'>.pictureid</span>
     </td>
     <td class='constraint detail'>release_location_pictureid_fkey<span title='Cascade on delete:
  Deletion of parent deletes child'>&nbsp;C</span></td>
    </tr>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="role.pictureid refs picture.pictureid via role_pictureid_fkey"><a href='role.html'>role</a><span class='relatedKey'>.pictureid</span>
     </td>
     <td class='constraint detail'>role_pictureid_fkey<span title='Cascade on delete:
@@ -168,7 +168,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>ismovie</td>
  <td class='detail'>bool</td>
  <td class='detail' align='right'>1</td>
@@ -179,7 +179,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='detail'>primarytitle</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>2147483647</td>
@@ -190,18 +190,18 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>releasetitle</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>2147483647</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'></td>
- <td class='detail' align='center'></td>
- <td class='detail'></td>
+ <td class='detail' align='right'>null</td>
  <td class='detail'></td>
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='detail'>adult</td>
  <td class='detail'>bool</td>
  <td class='detail' align='right'>1</td>
@@ -212,7 +212,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>startyear</td>
  <td class='detail'>float4</td>
  <td class='detail' align='right'>8,8</td>
@@ -223,7 +223,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='detail'>endyear</td>
  <td class='detail'>float4</td>
  <td class='detail' align='right'>8,8</td>
@@ -234,7 +234,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>duration</td>
  <td class='detail'>float4</td>
  <td class='detail' align='right'>8,8</td>
@@ -245,7 +245,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='detail'>budget</td>
  <td class='detail'>float4</td>
  <td class='detail' align='right'>8,8</td>
@@ -256,7 +256,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>grossboxoffice</td>
  <td class='detail'>float4</td>
  <td class='detail' align='right'>8,8</td>
@@ -267,7 +267,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='detail'>parentpicture</td>
  <td class='detail'>bpchar</td>
  <td class='detail' align='right'>9</td>
@@ -277,7 +277,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'></td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="picture.parentpicture refs picture.pictureid via picture_parentpicture_fkey"><a href='picture.html'>picture</a><span class='relatedKey'>.pictureid</span>
     </td>
     <td class='constraint detail'>picture_parentpicture_fkey<span title='Restrict delete:
@@ -287,7 +287,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>seasonnumber</td>
  <td class='detail'>float4</td>
  <td class='detail' align='right'>8,8</td>
@@ -298,7 +298,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='detail'>episodenumber</td>
  <td class='detail'>float4</td>
  <td class='detail' align='right'>8,8</td>
@@ -310,7 +310,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 </table>
-<p title='13 columns'>Table contained 0 rows at Tue Feb 20 18:47 IST 2018<p/>
+<p title='13 columns'>Table contained 0 rows at Tue Feb 20 19:00 IST 2018<p/>
 </td></tr></table>
 <div class='indent'>
 <b>Indexes:</b>

@@ -67,7 +67,7 @@
          </column>
          <column autoUpdated="false" defaultValue="true" digits="0" id="1" name="ismovie" nullable="true" remarks="" size="1" type="bool"/>
          <column autoUpdated="false" digits="0" id="2" name="primarytitle" nullable="false" remarks="" size="2147483647" type="varchar"/>
-         <column autoUpdated="false" digits="0" id="3" name="releasetitle" nullable="false" remarks="" size="2147483647" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="3" name="releasetitle" nullable="true" remarks="" size="2147483647" type="varchar"/>
          <column autoUpdated="false" defaultValue="false" digits="0" id="4" name="adult" nullable="true" remarks="" size="1" type="bool"/>
          <column autoUpdated="false" digits="8" id="5" name="startyear" nullable="true" remarks="" size="8" type="float4"/>
          <column autoUpdated="false" digits="8" id="6" name="endyear" nullable="true" remarks="" size="8" type="float4"/>
