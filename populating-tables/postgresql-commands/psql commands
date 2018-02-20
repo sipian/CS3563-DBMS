@@ -1,31 +1,33 @@
+drop table person;
 create table person ( 
-	PersonID varchar primary key,
+	PersonID char(9) primary key,
 	PersonName varchar,
-	BirthYear varchar,
-	DeathYear varchar
+	BirthYear int CHECK (BirthYear >= 0),
+	DeathYear int CHECK (DeathYear >= 0)
 );
 COPY person FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.person.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
+drop table picture;
 create table picture (
-	PictureID varchar primary key,
+	PictureID char(9) primary key,
 	PrimaryTitle varchar,
 	OriginalTitle varchar,
-	Adult varchar,
-	StartYear varchar,
-	EndYear varchar,
-	Duration varchar,
-	Budget varchar,
-	GrossBoxOffice varchar,
-	ParentPicture varchar,
-	SeasonNumber varchar,
-	EpisodeNumber varchar
+	Adult bool DEFAULT FALSE,
+	StartYear real CHECK (StartYear >= 0),
+	EndYear  real CHECK (EndYear >= 0),
+	Duration real CHECK(Duration >= 0),
+	Budget real CHECK(Budget >= 0),
+	GrossBoxOffice real CHECK(GrossBoxOffice >= 0),
+	ParentPicture char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
+	SeasonNumber real CHECK(SeasonNumber >= 0),
+	EpisodeNumber real CHECK(EpisodeNumber >= 0)
 );
 COPY picture FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.basics_episode_final.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
 create table role (
-	PictureID varchar references picture(PictureID),
-	PersonID varchar references person(PersonID),
-	Role varchar
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
+	PersonID char(9) references person(PersonID) ON DELETE CASCADE ON UPDATE CASCADE,
+	Role varchar DEFAULT 'Miscellaneous'
 );
 COPY role FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.principals_required.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
@@ -33,51 +35,48 @@ create table awards(
 	AwardID varchar,
 	AwardName varchar,
 	AwardOrganization varchar,
-	PictureID varchar references picture(PictureID),
-	PersonID varchar references person(PersonID),
-	Winner varchar,
-	Year varchar
-);
-COPY awards FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/awards.basics.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
-
-create table awards(
-	AwardID varchar,
-	AwardName varchar,
-	AwardOrganization varchar,
-	PictureID varchar references picture(PictureID),
-	PersonID varchar references person(PersonID),
-	Winner varchar,
-	Year varchar
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
+	PersonID char(9) references person(PersonID) ON DELETE CASCADE ON UPDATE CASCADE,
+	Winner bool DEFAULT FALSE,
+	Year int CHECK(Year >= 0)
 );
 COPY awards FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/awards.basics.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
 create table languages (
-	PictureID varchar references picture(PictureID),
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
 	Language varchar
 );
 COPY languages FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.languages.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
 create table production_company (
-	PictureID varchar references picture(PictureID),
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
 	CompanyName varchar,
-	CompanyID varchar
+	CompanyID int CHECK(CompanyID >= 0)
 );
 COPY production_company FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.production_comp.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
 create table filming_location (
-	PictureID varchar references picture(PictureID),
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
 	CountryName varchar
 );
 COPY filming_location FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.filming_location.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
 create table release_location (
-	PictureID varchar references picture(PictureID),
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
 	Region varchar
 );
 COPY release_location FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.release_location.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
 create table genres (
-	PictureID varchar references picture(PictureID),
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
 	Genre varchar
 );
 COPY genres FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.genre.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+
+create table rating (
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
+	averageRating real,
+	numVotes int
+
+);
+COPY rating FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/csv/title.ratings.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
