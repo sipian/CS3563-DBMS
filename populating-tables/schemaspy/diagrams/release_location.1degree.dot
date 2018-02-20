@@ -25,6 +25,7 @@ digraph "oneDegreeRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">picture</TD></TR>
       <TR><TD PORT="pictureid" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">pictureid</TD></TR>
+      <TR><TD PORT="ismovie" COLSPAN="3" ALIGN="LEFT">ismovie</TD></TR>
       <TR><TD PORT="primarytitle" COLSPAN="3" ALIGN="LEFT">primarytitle</TD></TR>
       <TR><TD PORT="releasetitle" COLSPAN="3" ALIGN="LEFT">releasetitle</TD></TR>
       <TR><TD PORT="adult" COLSPAN="3" ALIGN="LEFT">adult</TD></TR>
@@ -46,7 +47,7 @@ digraph "oneDegreeRelationshipsDiagram" {
     <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">release_location</TD></TR>
       <TR><TD PORT="pictureid" COLSPAN="2" ALIGN="LEFT">pictureid</TD><TD PORT="pictureid.type" ALIGN="LEFT">bpchar[9]</TD></TR>
-      <TR><TD PORT="region" COLSPAN="2" ALIGN="LEFT">region</TD><TD PORT="region.type" ALIGN="LEFT">varchar[2147483647]</TD></TR>
+      <TR><TD PORT="countryname" COLSPAN="2" ALIGN="LEFT">countryname</TD><TD PORT="countryname.type" ALIGN="LEFT">varchar[75]</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 &gt;</TD></TR>
     </TABLE>>
     URL="release_location.html"

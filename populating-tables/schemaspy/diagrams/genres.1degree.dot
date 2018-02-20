@@ -36,6 +36,7 @@ digraph "oneDegreeRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">picture</TD></TR>
       <TR><TD PORT="pictureid" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">pictureid</TD></TR>
+      <TR><TD PORT="ismovie" COLSPAN="3" ALIGN="LEFT">ismovie</TD></TR>
       <TR><TD PORT="primarytitle" COLSPAN="3" ALIGN="LEFT">primarytitle</TD></TR>
       <TR><TD PORT="releasetitle" COLSPAN="3" ALIGN="LEFT">releasetitle</TD></TR>
       <TR><TD PORT="adult" COLSPAN="3" ALIGN="LEFT">adult</TD></TR>
