@@ -8,7 +8,7 @@ create table person (
 create table picture (
 	PictureID char(9) primary key,
 	IsMovie bool DEFAULT TRUE,
-	PrimaryTitle varchar NOT NULL,
+	PrimaryTitle varchar,
 	ReleaseTitle varchar ,
 	Adult bool DEFAULT FALSE,
 	StartYear real CHECK (StartYear >= 0),
