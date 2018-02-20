@@ -20,26 +20,58 @@ create table picture (
 	Duration real CHECK(Duration >= 0),
 	Budget real CHECK(Budget >= 0),
 	GrossBoxOffice real CHECK(GrossBoxOffice >= 0),
-	ParentPicture char(9) references picture(PictureID) ,
+	ParentPicture char(9) references picture(PictureID),
 	SeasonNumber real CHECK(SeasonNumber >= 0),
 	EpisodeNumber real CHECK(EpisodeNumber >= 0)
 );
 
-create table role ( PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, PersonID char(9) references person(PersonID) ON DELETE CASCADE ON UPDATE CASCADE, Role varchar(15) DEFAULT 'Miscellaneous');
+create table role (
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
+	PersonID char(9) references person(PersonID) ON DELETE CASCADE ON UPDATE CASCADE,
+	Role varchar(15) DEFAULT 'Miscellaneous'
+);
 
-create table awards( AwardID varchar(25) NOT NULL,AwardName varchar NOT NULL, AwardOrganization varchar NOT NULL, PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, PersonID char(9) references person(PersonID) ON DELETE CASCADE ON UPDATE CASCADE, Winner bool DEFAULT FALSE, Year int CHECK(Year >= 0));
+create table awards(
+	AwardID varchar(25) NOT NULL,
+	AwardName varchar NOT NULL, 
+	AwardOrganization varchar NOT NULL, 
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, 
+	PersonID char(9) references person(PersonID) ON DELETE CASCADE ON UPDATE CASCADE, 
+	Winner bool DEFAULT FALSE, 
+	Year int CHECK(Year >= 0)
+);
 
-create table languages ( PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, Language varchar(75) DEFAULT 'English');
+create table languages ( 
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, 
+	Language varchar(75) DEFAULT 'English'
+);
 
-create table production_company ( PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, CompanyName varchar NOT NULL, CompanyID int CHECK(CompanyID >= 0));
+create table production_company ( 
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
+	CompanyName varchar NOT NULL,
+	CompanyID int CHECK(CompanyID >= 0)
+);
 
-create table filming_location (PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,CountryName varchar(75) NOT NULL);
+create table filming_location (
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
+	CountryName varchar(75) NOT NULL
+);
 
-create table release_location ( PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, CountryName varchar(75) NOT NULL);
+create table release_location (
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
+	CountryName varchar(75) NOT NULL
+);
 
-create table genres ( PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, Genre varchar );
+create table genres (
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
+	Genre varchar
+);
 
-create table rating (PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, averageRating real DEFAULT 0.0, numVotes int DEFAULT 0);
+create table rating (
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
+	averageRating real DEFAULT 0.0,
+	numVotes int DEFAULT 0
+);
 
 
 COPY person FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/person.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
