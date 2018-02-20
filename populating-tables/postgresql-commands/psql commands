@@ -1,3 +1,7 @@
+drop database gp2_db;
+create database gp2_db;
+\connect gp2_db
+
 create table person ( 
 	PersonID char(9) primary key,
 	PersonName varchar NOT NULL,
@@ -23,8 +27,7 @@ create table picture (
 
 create table role ( PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, PersonID char(9) references person(PersonID) ON DELETE CASCADE ON UPDATE CASCADE, Role varchar(15) DEFAULT 'Miscellaneous');
 
-create table awards( AwardID varchar(25) NOT NULL,AwardName varchar NOT NULL, AwardOrganization varchar NOT NULL, PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, PersonID char(9) references person(PersonID) ON DELETE CASCADE ON UPDATE CASCADE, Winner bool DEFAULT FALSE, Year int CHECK(Year >= 0), 
-primary key (AwardID, PictureID, PersonID));
+create table awards( AwardID varchar(25) NOT NULL,AwardName varchar NOT NULL, AwardOrganization varchar NOT NULL, PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, PersonID char(9) references person(PersonID) ON DELETE CASCADE ON UPDATE CASCADE, Winner bool DEFAULT FALSE, Year int CHECK(Year >= 0));
 
 create table languages ( PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, Language varchar(75) DEFAULT 'English');
 
@@ -43,8 +46,6 @@ COPY person FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/person.
 
 COPY picture FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/pictures.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
-COPY role FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/role.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
-
 COPY awards FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/awards.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
 COPY languages FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/languages.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
@@ -58,3 +59,5 @@ COPY release_location FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-c
 COPY genres FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/genre.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
 COPY rating FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/ratings.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+
+COPY role FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/role.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;

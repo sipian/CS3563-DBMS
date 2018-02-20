@@ -101,7 +101,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </thead>
 <tbody valign='top'>
 <tr class='even'>
- <td class='primaryKey' title='Primary Key'>awardid</td>
+ <td class='detail'>awardid</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>25</td>
  <td class='detail' align='center'></td>
@@ -134,12 +134,12 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 <tr class='odd'>
- <td class='primaryKey' title='Primary Key'>pictureid</td>
+ <td class='detail'>pictureid</td>
  <td class='detail'>bpchar</td>
  <td class='detail' align='right'>9</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'></td>
- <td class='detail' align='center'></td>
- <td class='detail'></td>
+ <td class='detail' align='right'>null</td>
  <td class='detail'></td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
@@ -154,12 +154,12 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 <tr class='even'>
- <td class='primaryKey' title='Primary Key'>personid</td>
+ <td class='detail'>personid</td>
  <td class='detail'>bpchar</td>
  <td class='detail' align='right'>9</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'></td>
- <td class='detail' align='center'></td>
- <td class='detail'></td>
+ <td class='detail' align='right'>null</td>
  <td class='detail'></td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
@@ -196,28 +196,8 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 </table>
-<p title='7 columns'>Table contained 0 rows at Tue Feb 20 19:03 IST 2018<p/>
+<p title='7 columns'>Table contained 0 rows at Tue Feb 20 19:24 IST 2018<p/>
 </td></tr></table>
-<div class='indent'>
-<b>Indexes:</b>
-<table class='dataTable' border='1' rules='groups'><colgroup><colgroup><colgroup><colgroup>
-<thead>
- <tr>
-  <th>Column(s)</th>
-  <th>Type</th>
-  <th>Sort</th>
-  <th class='constraint' style='text-align:left;'>Constraint Name</th>
- </tr>
-</thead>
-<tbody>
- <tr>
-  <td class='primaryKey'>awardid + pictureid + personid</td>
-  <td class='detail'>Primary key</td>
-  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
-  <td class='constraint' style='text-align:left;'>awards_pkey</td>
- </tr>
-</table>
-</div>
 <table width='100%' border='0'><tr><td class='container'>
 <br><form action='get'><b>Close relationships</b><span class='degrees' id='degrees' title='Detail diminishes with increased separation from awards'>
 &nbsp;within <label for='oneDegree'><input type='radio' name='degrees' id='oneDegree' checked>one</label>  <label for='twoDegrees'><input type='radio' name='degrees' id='twoDegrees'>two degrees</label> of separation</span><b>:</b></form>
