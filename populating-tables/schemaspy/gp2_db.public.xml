@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <database name="gp2_db" schema="public" type="PostgreSQL - 9.5.11">
    <tables>
-      <table name="awards" numRows="0" remarks="" schema="public" type="TABLE">
+      <table name="awards" numRows="1734" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" digits="0" id="0" name="awardid" nullable="false" remarks="" size="25" type="varchar"/>
          <column autoUpdated="false" digits="0" id="1" name="awardname" nullable="false" remarks="" size="2147483647" type="varchar"/>
          <column autoUpdated="false" digits="0" id="2" name="awardorganization" nullable="false" remarks="" size="2147483647" type="varchar"/>
@@ -14,25 +14,25 @@
          <column autoUpdated="false" defaultValue="false" digits="0" id="5" name="winner" nullable="true" remarks="" size="1" type="bool"/>
          <column autoUpdated="false" digits="0" id="6" name="year" nullable="true" remarks="" size="10" type="int4"/>
       </table>
-      <table name="filming_location" numRows="0" remarks="" schema="public" type="TABLE">
+      <table name="filming_location" numRows="75660" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" digits="0" id="0" name="pictureid" nullable="true" remarks="" size="9" type="bpchar">
             <parent column="pictureid" foreignKey="filming_location_pictureid_fkey" implied="false" onDeleteCascade="true" table="picture"/>
          </column>
          <column autoUpdated="false" digits="0" id="1" name="countryname" nullable="false" remarks="" size="75" type="varchar"/>
       </table>
-      <table name="genres" numRows="0" remarks="" schema="public" type="TABLE">
+      <table name="genres" numRows="5480283" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" digits="0" id="0" name="pictureid" nullable="true" remarks="" size="9" type="bpchar">
             <parent column="pictureid" foreignKey="genres_pictureid_fkey" implied="false" onDeleteCascade="true" table="picture"/>
          </column>
          <column autoUpdated="false" digits="0" id="1" name="genre" nullable="true" remarks="" size="2147483647" type="varchar"/>
       </table>
-      <table name="languages" numRows="0" remarks="" schema="public" type="TABLE">
+      <table name="languages" numRows="217860" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" digits="0" id="0" name="pictureid" nullable="true" remarks="" size="9" type="bpchar">
             <parent column="pictureid" foreignKey="languages_pictureid_fkey" implied="false" onDeleteCascade="true" table="picture"/>
          </column>
          <column autoUpdated="false" defaultValue="'English'::character varying" digits="0" id="1" name="language" nullable="true" remarks="" size="75" type="varchar"/>
       </table>
-      <table name="person" numRows="0" remarks="" schema="public" type="TABLE">
+      <table name="person" numRows="8435455" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" digits="0" id="0" name="personid" nullable="false" remarks="" size="9" type="bpchar">
             <child column="personid" foreignKey="awards_personid_fkey" implied="false" onDeleteCascade="true" table="awards"/>
             <child column="personid" foreignKey="role_personid_fkey" implied="false" onDeleteCascade="true" table="role"/>
@@ -45,7 +45,7 @@
             <column ascending="true" name="personid"/>
          </index>
       </table>
-      <table name="picture" numRows="0" remarks="" schema="public" type="TABLE">
+      <table name="picture" numRows="3793252" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" digits="0" id="0" name="pictureid" nullable="false" remarks="" size="9" type="bpchar">
             <child column="pictureid" foreignKey="awards_pictureid_fkey" implied="false" onDeleteCascade="true" table="awards"/>
             <child column="pictureid" foreignKey="filming_location_pictureid_fkey" implied="false" onDeleteCascade="true" table="filming_location"/>
@@ -76,27 +76,27 @@
             <column ascending="true" name="pictureid"/>
          </index>
       </table>
-      <table name="production_company" numRows="0" remarks="" schema="public" type="TABLE">
+      <table name="production_company" numRows="93633" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" digits="0" id="0" name="pictureid" nullable="true" remarks="" size="9" type="bpchar">
             <parent column="pictureid" foreignKey="production_company_pictureid_fkey" implied="false" onDeleteCascade="true" table="picture"/>
          </column>
          <column autoUpdated="false" digits="0" id="1" name="companyname" nullable="false" remarks="" size="2147483647" type="varchar"/>
          <column autoUpdated="false" digits="0" id="2" name="companyid" nullable="true" remarks="" size="10" type="int4"/>
       </table>
-      <table name="rating" numRows="0" remarks="" schema="public" type="TABLE">
+      <table name="rating" numRows="607078" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" digits="0" id="0" name="pictureid" nullable="true" remarks="" size="9" type="bpchar">
             <parent column="pictureid" foreignKey="rating_pictureid_fkey" implied="false" onDeleteCascade="true" table="picture"/>
          </column>
          <column autoUpdated="false" defaultValue="0.0" digits="8" id="1" name="averagerating" nullable="true" remarks="" size="8" type="float4"/>
          <column autoUpdated="false" defaultValue="0" digits="0" id="2" name="numvotes" nullable="true" remarks="" size="10" type="int4"/>
       </table>
-      <table name="release_location" numRows="0" remarks="" schema="public" type="TABLE">
+      <table name="release_location" numRows="1685882" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" digits="0" id="0" name="pictureid" nullable="true" remarks="" size="9" type="bpchar">
             <parent column="pictureid" foreignKey="release_location_pictureid_fkey" implied="false" onDeleteCascade="true" table="picture"/>
          </column>
          <column autoUpdated="false" digits="0" id="1" name="countryname" nullable="false" remarks="" size="75" type="varchar"/>
       </table>
-      <table name="role" numRows="0" remarks="" schema="public" type="TABLE">
+      <table name="role" numRows="21494867" remarks="" schema="public" type="TABLE">
          <column autoUpdated="false" digits="0" id="0" name="pictureid" nullable="true" remarks="" size="9" type="bpchar">
             <parent column="pictureid" foreignKey="role_pictureid_fkey" implied="false" onDeleteCascade="true" table="picture"/>
          </column>

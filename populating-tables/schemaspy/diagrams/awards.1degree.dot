@@ -32,7 +32,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="personid" COLSPAN="2" ALIGN="LEFT">personid</TD><TD PORT="personid.type" ALIGN="LEFT">bpchar[9]</TD></TR>
       <TR><TD PORT="winner" COLSPAN="2" ALIGN="LEFT">winner</TD><TD PORT="winner.type" ALIGN="LEFT">bool[1]</TD></TR>
       <TR><TD PORT="year" COLSPAN="2" ALIGN="LEFT">year</TD><TD PORT="year.type" ALIGN="LEFT">int4[10]</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">1,734 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 &gt;</TD></TR>
     </TABLE>>
     URL="awards.html"
     tooltip="awards"
@@ -45,7 +45,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="personname" COLSPAN="3" ALIGN="LEFT">personname</TD></TR>
       <TR><TD PORT="birthyear" COLSPAN="3" ALIGN="LEFT">birthyear</TD></TR>
       <TR><TD PORT="deathyear" COLSPAN="3" ALIGN="LEFT">deathyear</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">8,435,455 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
     </TABLE>>
     URL="person.html"
     tooltip="person"
@@ -67,7 +67,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="parentpicture" COLSPAN="3" ALIGN="LEFT">parentpicture</TD></TR>
       <TR><TD PORT="seasonnumber" COLSPAN="3" ALIGN="LEFT">seasonnumber</TD></TR>
       <TR><TD PORT="episodenumber" COLSPAN="3" ALIGN="LEFT">episodenumber</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">9 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">3,793,252 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">9 &gt;</TD></TR>
     </TABLE>>
     URL="picture.html"
     tooltip="picture"

@@ -37,7 +37,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="parentpicture" COLSPAN="3" ALIGN="LEFT">parentpicture</TD></TR>
       <TR><TD PORT="seasonnumber" COLSPAN="3" ALIGN="LEFT">seasonnumber</TD></TR>
       <TR><TD PORT="episodenumber" COLSPAN="3" ALIGN="LEFT">episodenumber</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">9 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">3,793,252 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">9 &gt;</TD></TR>
     </TABLE>>
     URL="picture.html"
     tooltip="picture"
@@ -49,7 +49,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="pictureid" COLSPAN="2" ALIGN="LEFT">pictureid</TD><TD PORT="pictureid.type" ALIGN="LEFT">bpchar[9]</TD></TR>
       <TR><TD PORT="companyname" COLSPAN="2" ALIGN="LEFT">companyname</TD><TD PORT="companyname.type" ALIGN="LEFT">varchar[2147483647]</TD></TR>
       <TR><TD PORT="companyid" COLSPAN="2" ALIGN="LEFT">companyid</TD><TD PORT="companyid.type" ALIGN="LEFT">int4[10]</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">93,633 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 &gt;</TD></TR>
     </TABLE>>
     URL="production_company.html"
     tooltip="production_company"
