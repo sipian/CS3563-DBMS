@@ -1,7 +1,7 @@
 import pandas as pd
 
-FULL_DB = 'title.basics_episode.tsv'
-REQ_DB = 'title.basics_episode_required.csv'
+FULL_DB = '../legacy/title.basics_episode.tsv'
+REQ_DB = 'title.basics_episode_final.csv'
 EXT_DB = 'title.basics_episode_extra.csv'
 
 # read the tsv excluding the fields
@@ -20,14 +20,14 @@ cur_db = pd.read_csv(FULL_DB, sep='\t', na_values='\\N', usecols=to_include, low
 cur_db.rename(columns={
                         'tconst': 'PictureID',
                         'primaryTitle': 'PrimaryTitle',
-                        'OriginalTitle': 'ReleaseTitle',
+                        'originalTitle': 'ReleaseTitle',
                         'isAdult': 'Adult',
                         'startYear': 'StartYear',
                         'endYear': 'EndYear',
                         'runtimeMinutes': 'Duration',
                         'budget': 'Budget',
                         'original_language': 'Language',
-                        'Revenue': 'GrossBoxOffice',
+                        'revenue': 'GrossBoxOffice',
                         'seasonNumber': 'SeasonNumber',
                         'episodeNumber': 'EpisodeNumber',
                         'parentTconst': 'ParentPicture'
@@ -39,11 +39,13 @@ print(to_include)
 to_include.remove('titleType')  # this is inplace
 req_db = cur_db[(cur_db['titleType'] == 'movie') |
                 (cur_db['titleType'] == 'tvSeries') |
-                (cur_db['titleType'] == 'tvEpisode')]
+                (cur_db['titleType'] == 'tvEpisode') |
+                (cur_db['titleType'] == 'tvMiniSeries')]
 req_db.to_csv(REQ_DB, sep=',', na_rep='\\N', columns=to_include, index=False)
 ext_db = cur_db[(cur_db['titleType'] != 'movie') &
                 (cur_db['titleType'] != 'tvSeries') &
-                (cur_db['titleType'] != 'tvEpisode')]
+                (cur_db['titleType'] != 'tvEpisode') &
+                (cur_db['titleType'] != 'tvMiniSeries')]
 ext_db.to_csv(EXT_DB, sep=',', na_rep='\\N', columns=to_include, index=False)
 
 # Remove from RAM

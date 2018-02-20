@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from iso3166 import countries
 
-CUR_DB = 'title.akas.tsv'
+CUR_DB = '../title.akas.tsv'
 ID_LIST = 'PictureID_list.txt'
 REQ_DB = 'title.release_location.csv'
 cur_db = pd.read_csv(CUR_DB, sep='\t',

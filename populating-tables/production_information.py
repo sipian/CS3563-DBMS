@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from iso3166 import countries
 
-CUR_DB = 'title.basics_episode.tsv'
+CUR_DB = '../legacy/title.basics_episode.tsv'
 ID_LIST = 'PictureID_list.txt'
 REQ_DB_1 = 'title.production_comp.csv'
 REQ_DB_2 = 'title.filming_location.csv'

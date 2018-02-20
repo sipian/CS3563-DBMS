@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-REQ_DB = 'title.principals.tsv'
+REQ_DB = '../legacy/title.principals.tsv'
 REQ_DB_MOD = 'title.principals_required.csv'
 ID_LIST = 'PictureID_list.txt'
 

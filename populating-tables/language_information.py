@@ -3,7 +3,7 @@ import pandas as pd
 from iso639 import languages
 
 CUR_DB = '../title.akas.tsv'
-BIG_DB = 'title.basics_episode_required.csv'
+BIG_DB = 'title.basics_episode_final.csv'
 ID_LIST = 'PictureID_list.txt'
 REQ_DB_1 = 'title.languages.csv'
 REQ_DB_2 = 'title.basics_episode_final.csv'
