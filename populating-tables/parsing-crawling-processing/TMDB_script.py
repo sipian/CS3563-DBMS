@@ -12,7 +12,6 @@ tmdb.API_KEY = sys.argv[4]
 
 def get_data(imdb_id):
     obj = tmdb.base.TMDB()
-    path = 'find/{}?api_key={}&external_source=imdb_id'.format(imdb_id, tmdb.API_KEY)
     return obj._GET(path=path)
 
 ids = set(np.genfromtxt('IMDB-ID_{}_list'.format(cat), dtype=str).tolist())

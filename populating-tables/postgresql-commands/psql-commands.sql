@@ -28,7 +28,8 @@ create table picture (
 create table role (
 	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
 	PersonID char(9) references person(PersonID) ON DELETE CASCADE ON UPDATE CASCADE,
-	Role varchar(15) DEFAULT 'Miscellaneous'
+	Role varchar(15) DEFAULT 'Miscellaneous',
+    IsMovie bool DEFAULT FALSE
 );
 
 create table awards(
@@ -74,22 +75,22 @@ create table rating (
 );
 
 
-COPY person FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/person.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+COPY person FROM '/tmp/person.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
-COPY picture FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/pictures.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+COPY picture FROM '/tmp/pictures.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
-COPY awards FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/awards.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+COPY awards FROM '/tmp/awards.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
-COPY languages FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/languages.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+COPY languages FROM '/tmp/languages.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
-COPY production_company FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/production_comp.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+COPY production_company FROM '/tmp/production_comp.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
-COPY filming_location FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/filming_location.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+COPY filming_location FROM '/tmp/filming_location.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
-COPY release_location FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/release_location.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+COPY release_location FROM '/tmp/release_location.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
-COPY genres FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/genre.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+COPY genres FROM '/tmp/genre.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
-COPY rating FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/ratings.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+COPY rating FROM '/tmp/ratings.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
-COPY role FROM '/home/harsh/btech/sem-6/dbms-2/project-dataset/new-csv/role.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+COPY role FROM '/tmp/role.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
