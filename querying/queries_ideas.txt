@@ -1,0 +1,126 @@
+1.
+join subtable singer and subtable winner awards by pictureid, count rows
+
+
+2.
+first filter rating < 5 and directors from roles
+J(ROLE, RATING) --> SELECT PerID, COUNT(*) AFTER GROUPING BY PerID
+    --> J(RESULT, PERSON) --> SELECT NAME, COUNTVAL
+
+ Need to change the csv structure
+
+3.
+J(ROLE, RATING) --> SELECT PerID, AVG(*) AFTER GROUPING BY PerID
+    --> SELECT MAX
+        --> SELECT * WHERE PerID is the result
+
+4.
+SELECT MIN(DURATION), PicID, ORIGINALTITLE, RELEASETITLE FROM PICTURE WHERE ISMOVIE == True
+GROUP BY STARTYEAR ORDER BY ASCENDING
+
+5.
+logic: I tell Harsh movie id per genre, Harsh checks at home with runtime
+
+6.
+
+FROM (
+filter adult in picture , this will hv ismovie also
+join mov , rating
+) AS Ap
+
+select max (rating) where ismovie = true
+
+select max (rating) where ismovie = false
+
+
+
+
+MAX (rating, )
+
+FROM (
+filter adult in picture , this will hv ismovie also
+join mov , rating
+)
+
+join picture and rating, filter adult out and then check
+
+7.
+
+join genres and rating -> table F
+join F and movies -> table X
+get A,B for ismovies = T, F
+
+
+
+use vishwak in logic searching
+select genre , max(avgRating)
+from X
+where ismovie = true
+group by genre
+
+8-
+
+
+
+8.
+select * , min(duration)
+
+from (
+	select movie_name, coalesce(prodTypeCode::real, 2018) end_year - start_year
+	from movies
+	where start_year is not null and ismovie=false;
+)
+
+where
+
+require temp variable to calculate - check link
+ismovie F, parentpicture NULL, StartYear != NULL
+
+9. ??
+
+10. ??
+
+11. assume singers in role
+join awards and role
+
+12. join awards , role (role has been filtered for singers)
+sort on awards.year , where organization == grammy print
+
+13.
+min max group(year), get names
+
+14 
+
+Filter out series name
+(FROM select parentId , min(3rd column)
+FROM join rating and picture(filter out movies), group by parentId & seasonNumber ->avg(rating)
+group by parentID)
+where 2nd column is > 7.5
+
+15.
+filter out actor count rows groupby(personid) --> check count with specific crew number
+
+16.
+two ways: except (all or all) and select (some and some)
+
+17. ??
+
+18.
+-> Inner Join between Production Company and Genres on pic id
+-> Unique rows based on filter (genre, company_name)
+-> count this ^^
+-> select the company_name, count value where count value > 5
+
+19.
+-> assume actress in role table
+-> select three subsets : actor table, actress table and director table
+-> join all these ^^ on picture id
+-> group by ACTOR, ACTRESS, DIR
+-> select the actor, actress where count value > 3
+
+20.
+-> create new table: director_experience
+	-> personid, mentorid, start year , end year //calculate duration as default value link in group
+-> assume asst.director in role table
+-> experience ==> select personid, avg(rating) from (group by personid (count rows where role = 'director' or 'asst.director' and join with rating table)
+-> 

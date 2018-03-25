@@ -1,3 +1,5 @@
 *.dot
 *.csv
 *.tsv
+
+data/
