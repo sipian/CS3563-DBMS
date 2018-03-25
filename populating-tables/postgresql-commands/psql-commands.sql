@@ -93,4 +93,4 @@ COPY genres FROM '/tmp/genre.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode'
 
 COPY rating FROM '/tmp/ratings.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
 
-COPY role FROM '/tmp/role.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;
+COPY role FROM '/tmp/roles.csv' CSV delimiter ',' NULL '\N' ENCODING 'unicode' header;

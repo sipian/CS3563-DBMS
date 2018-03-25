@@ -92,33 +92,53 @@ WITH ADULT_RATINGS AS (SELECT * FROM
                        ON
                        ADULTPICS.PictureID = RATS.PictureID) 
                       )
-    (SELECT PrimaryTitle, averageRating from ADULT_RATINGS WHERE IsMovie = True ORDER BY averageRating DESC LIMIT 1)
+    (SELECT PrimaryTitle, averageRating, IsMovie from ADULT_RATINGS WHERE IsMovie = True ORDER BY averageRating DESC LIMIT 1)
     UNION
-    (SELECT PrimaryTitle, averageRating from ADULT_RATINGS WHERE IsMovie = False ORDER BY averageRating DESC LIMIT 1);
+    (SELECT PrimaryTitle, averageRating, IsMovie from ADULT_RATINGS WHERE IsMovie = False ORDER BY averageRating DESC LIMIT 1);
 
 /* Question 7 */
-WITH PICINFO_RATS_JOIN AS (SELECT * FROM
-                            ((SELECT PictureID, PrimaryTitle FROM PICTURE) AS PICINFO
-                             INNER JOIN
-                             (SELECT PictureID, averageRating FROM RATING) AS RATS
-                             ON
-                             PICINFO.PictureID = RATS.PictureID
-                            )),
-    GENRE_JOIN AS (SELECT * FROM
-                        PICINFO_RATS_JOIN INNER JOIN GENRES ON PICINFO_RATS_JOIN.PictureID = GENRES.PictureID)
-    SELECT A.Genre, A.averageRating, A.PrimaryTitle FROM
-        GENRE_JOIN AS A
-        INNER JOIN (
-                   SELECT Genre, max(averageRating) as averageRating
-                   FROM GENRE_JOIN
-                   GROUP BY Genre
-                   ) AS B ON A.Genre = B.Genre AND A.averageRating = B.averageRating;
+WITH GENRE_JOIN AS (SELECT PICINFO.PictureID, PICINFO.PrimaryTitle, PICINFO.IsMovie, RATINFO.averageRating, G.Genre FROM
+                    (SELECT PictureID, PrimaryTitle, IsMovie FROM PICTURE) AS PICINFO
+                    INNER JOIN
+                    (SELECT PictureID, averageRating FROM RATING) AS RATINFO
+                    ON
+                    RATINFO.PictureID = PICINFO.PictureID
+                    INNER JOIN
+                    GENRES AS G ON G.PictureID = RATINFO.PictureID),
+     GENRE_GROUP_MAX AS (SELECT A.Genre, A.averageRating, A.PrimaryTitle, A.IsMovie FROM
+                         GENRE_JOIN AS A
+                         LEFT OUTER JOIN GENRE_JOIN AS B
+                         ON A.Genre = B.Genre AND A.averageRating < B.averageRating WHERE B.Genre IS NULL)
+     (SELECT PrimaryTitle, averageRating, Genre, IsMovie from GENRE_GROUP_MAX WHERE IsMovie = True)
+     UNION
+     (SELECT PrimaryTitle, averageRating, Genre, IsMovie from GENRE_GROUP_MAX WHERE IsMovie = False) ORDER BY Genre;
 
-/* Question 17 
-WITH PERSONNAMETABLE AS (SELECT PersonID, PersonName FROM PERSON),
-     DIRECTORTABLE AS (SELECT PersonID, PictureID FROM ROLE WHERE role = 'Director' and IsMovie = True),
-     PICTUREGROSSTABLE AS (SELECT PictureID, PrimaryTitle FROM PICTURE WHERE IsMovie = True and GrossBoxOffice > 2000000)
-     SELECT RES.PersonName, RES.PrimaryTitle, RES.Genre FROM
-        (
-                ------ need to wrap this up ------
-*/
+/* Question 9 */
+/* Assumption: Interpretation of award winning actor as an actor who has won any award for movies*/
+WITH MOVIE_ACTOR AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True AND Role = 'Actor'),
+     AWARD_WINNING_ACTOR AS (SELECT A.PersonID, A.PictureID FROM
+                                (SELECT PersonID, PictureID FROM MOVIE_ACTOR
+                                 INTERSECT
+                                 (SELECT PersonID, PictureID FROM AWARDS WHERE Winner = True AND LOWER(AwardName) LIKE '%actor%')
+                                ) AS A),
+     MOVIES_WITH_AWARDEES AS (SELECT A.PersonID, A.PictureID FROM
+                                (MOVIE_ACTOR AS A
+                                 INNER JOIN
+                                 AWARD_WINNING_ACTOR AS B ON B.PersonID = A.PersonID)),
+     GENRE_JOIN AS (SELECT PICINFO.PictureID, G.Genre, PICINFO.PrimaryTitle, PICINFO.GrossBoxOffice FROM
+                    (SELECT PictureID, GrossBoxOffice, PrimaryTitle FROM
+                     PICTURE WHERE IsMovie = True AND GrossBoxOffice IS NOT NULL) AS PICINFO
+                    INNER JOIN
+                    GENRES AS G ON G.PictureID = PICINFO.PictureID),
+     GENRE_GROUP_MAX AS (SELECT A.PictureID, A.PrimaryTitle, A.Genre, A.GrossBoxOffice FROM
+                         GENRE_JOIN AS A
+                         LEFT OUTER JOIN GENRE_JOIN AS B
+                         ON A.Genre = B.Genre AND A.GrossBoxOffice < B.GrossBoxOffice WHERE B.Genre IS NULL)
+     SELECT DISTINCT GGM.Genre, MWA.PictureID, GGM.PrimaryTitle, P.PersonName, GGM.GrossBoxOffice FROM
+            GENRE_GROUP_MAX AS GGM
+            INNER JOIN MOVIES_WITH_AWARDEES AS MWA
+            ON GGM.PictureID = MWA.PictureID
+            INNER JOIN PERSON AS P
+            ON MWA.PersonID = P.PersonID;
+
+/* Question 12 */
