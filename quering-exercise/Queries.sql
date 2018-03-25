@@ -114,6 +114,49 @@ WITH PICINFO_RATS_JOIN AS (SELECT * FROM
                    GROUP BY Genre
                    ) AS B ON A.Genre = B.Genre AND A.averageRating = B.averageRating;
 
+Assume table is F
+select a.*
+from F a
+LEFT OUTER JOIN F b
+on a.genre = b.genre AND a.rating < b.rating
+where b.genre IS NULL;
+
+
+/* QUESTION 8 */
+
+WITH DURATION_TABLE AS (
+    SELECT PictureID, PrimaryTitle, coalesce(EndYear::real, 2018)-StartYear Duration
+    FROM PICTURE
+    WHERE StartYear IS NOT NULL AND IsMovie=FALSE
+)
+SELECT PrimaryTitle
+FROM DURATION_TABLE
+ORDER BY Duration DESC
+LIMIT 1
+
+/*  QUESTION 11 */
+
+Assume role table has rows for singer as a role  
+
+WITH AWARD_WINNING_SINGERS AS (SELECT A.PersonID,A.Year FROM
+        (SELECT Year, PersonID FROM AWARDS WHERE AwardOrganization = 'grammy' AND Winner = True AND Year IS NOT NULL) AS A
+        INNER JOIN 
+        (SELECT PersonID FROM ROLE WHERE Role = 'singer') AS B
+        ON
+        A.PersonID = B.PersonID)
+
+SELECT F.PersonName, 2018-F.BirthYear
+FROM (
+    SELECT E.PersonName, E.BirthYear, E.Year - E.BirthYear Duration
+    FROM (
+        AWARD_WINNING_SINGERS
+        INNER JOIN
+        (SELECT  PersonID, PersonName, BirthYear FROM PERSON WHERE BirthYear IS NOT NULL) AS C
+        ON AWARD_WINNING_SINGERS.PersonID = C.PersonID) AS E
+        ORDER BY Duration DESC
+        LIMIT 1
+    ) AS F
+
 /* Question 17 
 WITH PERSONNAMETABLE AS (SELECT PersonID, PersonName FROM PERSON),
      DIRECTORTABLE AS (SELECT PersonID, PictureID FROM ROLE WHERE role = 'Director' and IsMovie = True),
