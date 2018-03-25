@@ -114,7 +114,7 @@ WITH GENRE_JOIN AS (SELECT PICINFO.PictureID, PICINFO.PrimaryTitle, PICINFO.IsMo
      (SELECT PrimaryTitle, averageRating, Genre, IsMovie from GENRE_GROUP_MAX WHERE IsMovie = False) ORDER BY Genre;
 
 /* Question 9 */
-/* Assumption: Interpretation of award winning actor as an actor who has won any award for movies*/
+/* Assumption: Interpretation of award winning actor as an actor who has won any award for movies */
 WITH MOVIE_ACTOR AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True AND Role = 'Actor'),
      AWARD_WINNING_ACTOR AS (SELECT A.PersonID, A.PictureID FROM
                                 (SELECT PersonID, PictureID FROM MOVIE_ACTOR
@@ -142,3 +142,12 @@ WITH MOVIE_ACTOR AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True A
             ON MWA.PersonID = P.PersonID;
 
 /* Question 12 */
+WITH GRAMMY_WINNERS AS (
+                        SELECT A.PersonID, A.Year FROM
+                        (SELECT PersonID, Year FROM
+                         AWARDS WHERE Winner = True AND AwardOrganization = 'grammy') AS A
+                         INNER JOIN
+                        (SELECT DISTINCT PersonID FROM
+                         ROLE WHERE Role = 'Singer') AS B
+                         ON A.PersonID = B.PersonID)
+     SELECT DISTINCT P.PersonName, GW.Year FROM (GRAMMY_WINNERS AS GW INNER JOIN PERSON AS P ON GW.PersonID = P.PersonID) ORDER BY GW.Year;
