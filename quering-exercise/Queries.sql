@@ -248,7 +248,7 @@ WITH PEOPLE AS (SELECT PersonName, T1.PersonID, PictureID, Role FROM ((SELECT Pi
                                (SELECT PersonName,PersonID FROM PERSON) AS T2 ON T1.PersonID = T2.PersonID)
                 ),
      ACTOR AS (SELECT * FROM PEOPLE WHERE Role = 'Actor'),
-     ACTRESS AS (SELECT * FROM PEOPLE WHERE Role = 'Music'),
+     ACTRESS AS (SELECT * FROM PEOPLE WHERE Role = 'Actress'),
      DIRECTOR AS (SELECT * FROM PEOPLE WHERE Role = 'Director')
 
 SELECT A.PersonName AS actor_name, B.PersonName AS actress_name, C.PersonName AS director_name FROM (
@@ -256,4 +256,5 @@ SELECT A.PersonName AS actor_name, B.PersonName AS actress_name, C.PersonName AS
     INNER JOIN DIRECTOR AS C ON A.PictureID = C.PictureID
     )
 GROUP BY (A.PersonID, A.PersonName, B.PersonID, B.PersonName, C.PersonID, C.PersonName)
-HAVING COUNT(*) > 3;
+HAVING COUNT(*) > 3
+ORDER BY A.PersonName;
