@@ -1,40 +1,24 @@
 /* Assumption Role table has a new role as singer */
 
 /* Question 1 */
-SELECT RESULT2.PersonName, RESULT1.counters FROM
-    (
-    SELECT F.PersonID, count(*) AS counters FROM 
-        ((SELECT PictureID, PersonID FROM ROLE WHERE role = 'Singer' AND ismovie = True) AS ROLET
-        INNER JOIN
-        (SELECT PictureID FROM AWARDS WHERE winner = True AND awardorganization = 'oscar' ) AS AWARDST
-        ON
-        ROLET.PictureId = AWARDST.PictureId) AS F
-        GROUP BY F.PersonID
-    ) AS RESULT1
-    INNER JOIN
-    (
-    SELECT PersonName, PersonID FROM PERSON
-    ) AS RESULT2
-    ON
-    RESULT1.PersonId = RESULT2.PersonID;
-
+WITH SINGER_INFO AS (SELECT PictureID, PersonID FROM ROLE WHERE Role = 'Singer' AND IsMovie = True),
+     OSCAR_WINNERS AS (SELECT PictureID FROM AWARDS WHERE Winner = True AND AwardOrganization = 'oscar'),
+     SINGERS_IN_AWARDEES AS (SELECT DISTINCT * FROM SINGER_INFO AS SI INNER JOIN OSCAR_WINNERS AS OW ON SI.PictureID = OW.PictureID)
+     SELECT RESULT2.PersonName AS PersonName, RESULT1.counters as MovieCount FROM
+            (SELECT SIA.PersonID, count(*) AS counters FROM SINGERS_IN_AWARDEES AS SIA GROUP BY SIA.PersonID) AS RESULT1
+             INNER JOIN
+            (SELECT PersonName, PersonID FROM PERSON) AS RESULT2
+             ON RESULT1.PersonID = RESULT2.PersonID;
+             
 /* Question 2 */
-SELECT RESULT2.PersonName, RESULT1.counters FROM
-    (
-    SELECT F.PersonID, count(*) AS counters FROM 
-        ((SELECT PictureID, PersonID FROM ROLE WHERE role = 'Director' AND IsMovie = True) AS ROLET
-        INNER JOIN
-        (SELECT PictureID FROM RATING WHERE averagerating > 5) AS RATINGT
-        ON
-        ROLET.PictureId = RATINGT.PictureId) AS F
-        GROUP BY F.PersonID
-    ) AS RESULT1
-    INNER JOIN
-    (
-    SELECT PersonName, PersonID FROM PERSON
-    ) AS RESULT2
-    ON
-    RESULT1.PersonId = RESULT2.PersonID;
+WITH DIRO_INFO AS (SELECT PictureID, PersonID FROM ROLE WHERE Role = 'Director' AND IsMovie = True),
+     BAD_MOVIES AS (SELECT PictureID FROM RATING WHERE averageRating < 5),
+     DIRO_FOR_BAD_MOVIES AS (SELECT DISTINCT * FROM DIRO_INFO AS DI INNER JOIN BAD_MOVIES AS BM ON DI.PictureID = BM.PictureID)
+     SELECT RESULT2.PersonName AS Director, RESULT1.counters as BadMoviesDirected FROM 
+            (SELECT DFBM.PersonID, count(*) AS counters FROM DIRO_FOR_BAD_MOVIES AS DFBM GROUP BY DFBM.PersonID) AS RESULT1
+             INNER JOIN
+            (SELECT PersonName, PersonID FROM PERSON) AS RESULT2
+             ON RESULT1.PersonID = RESULT2.PersonID;
 
 /* Question 3 */
 SELECT RESULT2.PersonName, RESULT1.max_avg_of_avg FROM
