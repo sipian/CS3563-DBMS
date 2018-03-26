@@ -130,37 +130,37 @@ WITH MOVIE_ACTOR AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True A
 /* QUESTION 10 (Syntax Error till now, working on it*/
 
 /* Assuming new table: director_experience
-	 personid, mentorid, start year , end year //calculate duration as default value link in group
+     personid, mentorid, start year , end year //calculate duration as default value link in group
 -> assume asst.director in role table
 */
 WITH EXPERIENCE AS ( SELECT PersonID,StartYear,EndYear FROM DIRECTOR_EXPERIENCE WHERE endYear-startYear > 5),
-	ROLES_ASSTDIR AS (SELECT * FROM ROLE WHERE Role = 'asst.director'),
-	OSCAR_WINNER_MOVIE AS (SELECT pictureid,year FROM AWARDS WHERE AwardOrganization = 'Oscar' AND IsMovie = True)
-	SELECT  RESULT2.PersonName FROM
-		(
-		SELECT FROM
-			(
-				(SELECT * FROM ROLES_ASSTDIR) AS ROLET
-				INNER JOIN
-				(SELECT * FROM OSCAR_WINNER_MOVIE) AS 	OSCART
-				ON
-				ROLET.pictureID = OSCAR.pictureID
-			) AS F
-			INNER JOIN
-			(SELECT * FROM EXPERIENCE) AS RESULTINTER
-			ON
-			RESULTINTER.PersonID = F.PersonID
-			WHERE
-			RESULTINTER.startYear <= F.year
-			AND
-			RESULTINTER.endYear >= F.year			
-		) AS RESULT1
-		INNER JOIN
-		(
-		SELECT PersonName,PersonID FROM PERSON
-		) AS RESULT2
-		ON
-		RESULT1.PersonID = RESULT2.PersonID;
+    ROLES_ASSTDIR AS (SELECT * FROM ROLE WHERE Role = 'asst.director'),
+    OSCAR_WINNER_MOVIE AS (SELECT pictureid,year FROM AWARDS WHERE AwardOrganization = 'Oscar' AND IsMovie = True)
+    SELECT  RESULT2.PersonName FROM
+        (
+        SELECT FROM
+            (
+                (SELECT * FROM ROLES_ASSTDIR) AS ROLET
+                INNER JOIN
+                (SELECT * FROM OSCAR_WINNER_MOVIE) AS   OSCART
+                ON
+                ROLET.pictureID = OSCAR.pictureID
+            ) AS F
+            INNER JOIN
+            (SELECT * FROM EXPERIENCE) AS RESULTINTER
+            ON
+            RESULTINTER.PersonID = F.PersonID
+            WHERE
+            RESULTINTER.startYear <= F.year
+            AND
+            RESULTINTER.endYear >= F.year           
+        ) AS RESULT1
+        INNER JOIN
+        (
+        SELECT PersonName,PersonID FROM PERSON
+        ) AS RESULT2
+        ON
+        RESULT1.PersonID = RESULT2.PersonID;
 
 
 /* Question 11 */
@@ -168,11 +168,11 @@ WITH EXPERIENCE AS ( SELECT PersonID,StartYear,EndYear FROM DIRECTOR_EXPERIENCE 
 WITH AWARD_WINNING_SINGERS AS (SELECT A.PersonID,A.Year FROM
         (SELECT Year, PersonID FROM AWARDS WHERE LOWER(AwardOrganization) = 'grammy' AND Winner = True AND Year IS NOT NULL) AS A
         INNER JOIN 
-        (SELECT PersonID FROM ROLE WHERE LOWER(Role) = 'singer') AS B
+        (SELECT PersonID FROM ROLE WHERE Role = 'Singer') AS B
         ON
         A.PersonID = B.PersonID)
 
-    SELECT E.PersonName, E.Year-E.BirthYear AS Age_When_Won_Grammy
+    SELECT E.PersonName, E.Year-E.BirthYear AS age_when_won_grammy
     FROM (
         AWARD_WINNING_SINGERS
         INNER JOIN
@@ -195,12 +195,12 @@ WITH GRAMMY_WINNERS AS (
 
 /* Question 13 */
 WITH MOVIES AS (SELECT * FROM PICTURE WHERE IsMovie = True),
- 	 MIN_GROSS_BOX AS ( SELECT StartYear, min(GrossBoxOffice) GrossBoxOffice FROM MOVIES
- 	 	GROUP BY StartYear ORDER BY StartYear),
-	 MAX_GROSS_BOX AS ( SELECT StartYear, max(GrossBoxOffice) GrossBoxOffice FROM MOVIES
-	  	GROUP BY StartYear ORDER BY StartYear)
+     MIN_GROSS_BOX AS ( SELECT StartYear, min(GrossBoxOffice) GrossBoxOffice FROM MOVIES
+        GROUP BY StartYear ORDER BY StartYear),
+     MAX_GROSS_BOX AS ( SELECT StartYear, max(GrossBoxOffice) GrossBoxOffice FROM MOVIES
+        GROUP BY StartYear ORDER BY StartYear)
 
-	SELECT A.StartYear, A.PrimaryTitle AS Movie_With_Miniumum_Gross, A.GrossBoxOffice AS Miniumum_Gross, B.PrimaryTitle AS Movie_With_Maxiumum_Gross, B.GrossBoxOffice AS Maxiumum_Gross, B.GrossBoxOffice - A.GrossBoxOffice AS Difference FROM (
+    SELECT A.StartYear, A.PrimaryTitle AS Movie_With_Miniumum_Gross, A.GrossBoxOffice AS Miniumum_Gross, B.PrimaryTitle AS Movie_With_Maxiumum_Gross, B.GrossBoxOffice AS Maxiumum_Gross, B.GrossBoxOffice - A.GrossBoxOffice AS Difference FROM (
     (SELECT StartYear, PrimaryTitle, GrossBoxOffice FROM
     MOVIES WHERE (StartYear, GrossBoxOffice) IN (SELECT * FROM MIN_GROSS_BOX) ORDER BY StartYear) AS A
     INNER JOIN
@@ -208,7 +208,6 @@ WITH MOVIES AS (SELECT * FROM PICTURE WHERE IsMovie = True),
     MOVIES WHERE (StartYear, GrossBoxOffice) IN (SELECT * FROM MAX_GROSS_BOX) ORDER BY StartYear) AS B
     ON A.StartYear = B.StartYear
     )
-
 
 /* Question 16 */
 WITH ACTORS AS (SELECT PersonID, IsMovie FROM ROLE WHERE Role = 'Actor'),
@@ -234,3 +233,20 @@ WITH DIRO_INFO AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True AND
             INNER JOIN PERSON AS P
             ON P.PersonID = DFM.PersonID
             ORDER BY genre;
+
+
+/* Question 19 */
+/* Assume Role table has role has actress */
+WITH PEOPLE AS (SELECT PersonName, T1.PersonID, PictureID, Role FROM ((SELECT PictureID, PersonID, Role FROM ROLE WHERE IsMovie = True) AS T1 INNER JOIN
+                               (SELECT PersonName,PersonID FROM PERSON) AS T2 ON T1.PersonID = T2.PersonID)
+                ),
+     ACTOR AS (SELECT * FROM PEOPLE WHERE Role = 'Actor'),
+     ACTRESS AS (SELECT * FROM PEOPLE WHERE Role = 'Actress'),
+     DIRECTOR AS (SELECT * FROM PEOPLE WHERE Role = 'Director')
+
+SELECT A.PersonName AS actor_name, B.PersonName AS actress_name, C.PersonName AS director_name FROM (
+    (ACTOR AS A INNER JOIN ACTRESS AS B ON A.PictureID = B.PictureID)
+    INNER JOIN DIRECTOR AS C ON A.PictureID = C.PictureID
+    )
+GROUP BY (A.PersonID, A.PersonName, B.PersonID, B.PersonName, C.PersonID, C.PersonName)
+HAVING COUNT(*) > 3;
