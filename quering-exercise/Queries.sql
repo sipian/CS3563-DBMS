@@ -21,25 +21,15 @@ WITH DIRO_INFO AS (SELECT PictureID, PersonID FROM ROLE WHERE Role = 'Director' 
              ON RESULT1.PersonID = RESULT2.PersonID;
 
 /* Question 3 */
-SELECT RESULT2.PersonName, RESULT1.max_avg_of_avg FROM
-    (
-    SELECT RESULTINTER.PersonID, max(RESULTINTER.avg_of_avg) as max_avg_of_avg FROM
-        (
-        SELECT F.PersonID, avg(F.averageRating) AS avg_of_avg FROM 
-            ((SELECT PictureID, PersonID FROM ROLE WHERE role = 'Director' AND IsMovie = True) AS ROLET
-            INNER JOIN
-            (SELECT * FROM RATING) AS RATINGT
-            ON
-            ROLET.PictureId = RATINGT.PictureId) AS F
-            GROUP BY F.PersonID
-        ) AS RESULTINTER GROUP BY RESULTINTER.PersonID
-    ) AS RESULT1
-    INNER JOIN
-    (
-    SELECT PersonName, PersonID FROM PERSON
-    ) AS RESULT2
-    ON
-    RESULT1.PersonID = RESULT2.PersonID;
+WITH DIRO_INFO AS (SELECT PictureID, PersonID FROM ROLE WHERE Role = 'Director' AND IsMovie = True),
+     MOVIE_INFO AS (SELECT PictureID, averageRating FROM RATING),
+     DIRO_MOVIE_RATINGS AS (SELECT DISTINCT * FROM DIRO_INFO AS DI INNER JOIN MOVIE_INFO AS MI ON DI.PictureID = MI.PictureID)
+     SELECT RESULT2.PersonName AS RatingBestDirector, RESULT1.avg_of_avg AS AvgOfAvgRating FROM
+            (SELECT DMR.PersonID, avg(DMR.averageRating) AS avg_of_avg FROM
+                DIRO_MOVIE_RATINGS AS DMR GROUP BY DMR.PersonID ORDER BY avg_of_avg DESC LIMIT 1) AS RESULT1
+                INNER JOIN
+            (SELECT PersonName, PersonID FROM PERSON) AS RESULT2
+             ON RESULT1.PersonID = RESULT2.PersonID;
 
 /* Question 4 */
 WITH MOVIES AS (SELECT * FROM PICTURE WHERE IsMovie = True)
@@ -48,7 +38,7 @@ WITH MOVIES AS (SELECT * FROM PICTURE WHERE IsMovie = True)
         (
         SELECT StartYear, min(Duration) FROM
             MOVIES GROUP BY StartYear
-        ) ORDER BY PrimaryTitle, StartYear;
+        ) ORDER BY StartYear;
 
 /* Question 5 */
 WITH MOVIES AS (SELECT * FROM PICTURE WHERE IsMovie = True),
@@ -63,7 +53,7 @@ WITH MOVIES AS (SELECT * FROM PICTURE WHERE IsMovie = True),
     SELECT PrimaryTitle, Genre, Duration FROM
     GENREJOIN WHERE (Genre, Duration) IN
         (
-        SELECT Genre, min(Duration) FROM
+        SELECT Genre, MAX(Duration) FROM
             GENREJOIN GROUP BY Genre
         ) ORDER BY PrimaryTitle, Genre;
 
