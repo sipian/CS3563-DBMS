@@ -127,6 +127,43 @@ WITH MOVIE_ACTOR AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True A
             INNER JOIN PERSON AS P
             ON MWA.PersonID = P.PersonID;
 
+
+/* QUESTION 10 (Syntax Error till now, working on it*/
+
+/* Assuming new table: director_experience
+	 personid, mentorid, start year , end year //calculate duration as default value link in group
+-> assume asst.director in role table
+*/
+WITH EXPERIENCE AS ( SELECT PersonID,StartYear,EndYear FROM DIRECTOR_EXPERIENCE WHERE endYear-startYear > 5),
+	ROLES_ASSTDIR AS (SELECT * FROM ROLE WHERE Role = 'asst.director'),
+	OSCAR_WINNER_MOVIE AS (SELECT pictureid,year FROM AWARDS WHERE AwardOrganization = 'Oscar' AND IsMovie = True)
+	SELECT  RESULT2.PersonName FROM
+		(
+		SELECT FROM
+			(
+				(SELECT * FROM ROLES_ASSTDIR) AS ROLET
+				INNER JOIN
+				(SELECT * FROM OSCAR_WINNER_MOVIE) AS 	OSCART
+				ON
+				ROLET.pictureID = OSCAR.pictureID
+			) AS F
+			INNER JOIN
+			(SELECT * FROM EXPERIENCE) AS RESULTINTER
+			ON
+			RESULTINTER.PersonID = F.PersonID
+			WHERE
+			RESULTINTER.startYear <= F.year
+			AND
+			RESULTINTER.endYear >= F.year			
+		) AS RESULT1
+		INNER JOIN
+		(
+		SELECT PersonName,PersonID FROM PERSON
+		) AS RESULT2
+		ON
+		RESULT1.PersonID = RESULT2.PersonID;
+
+
 /*  QUESTION 11 */
 
 /* Assume role table has rows for singer as a role  */
