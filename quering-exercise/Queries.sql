@@ -132,23 +132,21 @@ WITH MOVIE_ACTOR AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True A
 /* Assume role table has rows for singer as a role  */
 
 WITH AWARD_WINNING_SINGERS AS (SELECT A.PersonID,A.Year FROM
-        (SELECT Year, PersonID FROM AWARDS WHERE AwardOrganization = 'grammy' AND Winner = True AND Year IS NOT NULL) AS A
+        (SELECT Year, PersonID FROM AWARDS WHERE LOWER(AwardOrganization) = 'grammy' AND Winner = True AND Year IS NOT NULL) AS A
         INNER JOIN 
-        (SELECT PersonID FROM ROLE WHERE Role = 'singer') AS B
+        (SELECT PersonID FROM ROLE WHERE LOWER(Role) = 'singer') AS B
         ON
         A.PersonID = B.PersonID)
 
-SELECT F.PersonName, 2018-F.BirthYear
-FROM (
-    SELECT E.PersonName, E.BirthYear, E.Year - E.BirthYear Duration
+    SELECT E.PersonName, E.Year-E.BirthYear AS Age_When_Won_Grammy
     FROM (
         AWARD_WINNING_SINGERS
         INNER JOIN
         (SELECT  PersonID, PersonName, BirthYear FROM PERSON WHERE BirthYear IS NOT NULL) AS C
-        ON AWARD_WINNING_SINGERS.PersonID = C.PersonID) AS E
-        ORDER BY Duration DESC
-        LIMIT 1
-    ) AS F
+        ON AWARD_WINNING_SINGERS.PersonID = C.PersonID
+        ) AS E
+    ORDER BY (E.Year - E.BirthYear) ASC
+    LIMIT 1
 
 /* Question 12 */
 WITH GRAMMY_WINNERS AS (
@@ -160,3 +158,19 @@ WITH GRAMMY_WINNERS AS (
                          ROLE WHERE Role = 'Singer') AS B
                          ON A.PersonID = B.PersonID)
      SELECT DISTINCT P.PersonName, GW.Year FROM (GRAMMY_WINNERS AS GW INNER JOIN PERSON AS P ON GW.PersonID = P.PersonID) ORDER BY GW.Year;
+
+/* Question 13 */
+WITH MOVIES AS (SELECT * FROM PICTURE WHERE IsMovie = True),
+ 	 MIN_GROSS_BOX AS ( SELECT StartYear, min(GrossBoxOffice) GrossBoxOffice FROM MOVIES
+ 	 	GROUP BY StartYear ORDER BY StartYear),
+	 MAX_GROSS_BOX AS ( SELECT StartYear, max(GrossBoxOffice) GrossBoxOffice FROM MOVIES
+	  	GROUP BY StartYear ORDER BY StartYear)
+
+	SELECT A.StartYear, A.PrimaryTitle AS Movie_With_Miniumum_Gross, A.GrossBoxOffice AS Miniumum_Gross, B.PrimaryTitle AS Movie_With_Maxiumum_Gross, B.GrossBoxOffice AS Maxiumum_Gross, B.GrossBoxOffice - A.GrossBoxOffice AS Difference FROM (
+    (SELECT StartYear, PrimaryTitle, GrossBoxOffice FROM
+    MOVIES WHERE (StartYear, GrossBoxOffice) IN (SELECT * FROM MIN_GROSS_BOX) ORDER BY StartYear) AS A
+    INNER JOIN
+    (SELECT StartYear, PrimaryTitle, GrossBoxOffice FROM
+    MOVIES WHERE (StartYear, GrossBoxOffice) IN (SELECT * FROM MAX_GROSS_BOX) ORDER BY StartYear) AS B
+    ON A.StartYear = B.StartYear
+    )
