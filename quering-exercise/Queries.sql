@@ -234,6 +234,13 @@ WITH DIRO_INFO AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True AND
             ON P.PersonID = DFM.PersonID
             ORDER BY genre;
 
+/* Question 18 */
+SELECT PCG.CompanyName AS production_company, COUNT(*) AS numberofmovies FROM
+       (PRODUCTION_COMPANY AS PC INNER JOIN GENRES AS G ON PC.PictureID = G.PictureID) AS PCG
+       GROUP BY (PCG.CompanyID, PCG.CompanyName)
+       HAVING COUNT(*) > 10
+       ORDER BY COUNT(*) DESC
+       LIMIT 10;
 
 /* Question 19 */
 /* Assume Role table has role has actress */
@@ -241,7 +248,7 @@ WITH PEOPLE AS (SELECT PersonName, T1.PersonID, PictureID, Role FROM ((SELECT Pi
                                (SELECT PersonName,PersonID FROM PERSON) AS T2 ON T1.PersonID = T2.PersonID)
                 ),
      ACTOR AS (SELECT * FROM PEOPLE WHERE Role = 'Actor'),
-     ACTRESS AS (SELECT * FROM PEOPLE WHERE Role = 'Actress'),
+     ACTRESS AS (SELECT * FROM PEOPLE WHERE Role = 'Music'),
      DIRECTOR AS (SELECT * FROM PEOPLE WHERE Role = 'Director')
 
 SELECT A.PersonName AS actor_name, B.PersonName AS actress_name, C.PersonName AS director_name FROM (
