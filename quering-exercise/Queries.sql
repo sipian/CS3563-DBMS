@@ -127,14 +127,12 @@ WITH MOVIE_ACTOR AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True A
             INNER JOIN PERSON AS P
             ON MWA.PersonID = P.PersonID;
 
-/*  QUESTION 11 */
-
+/* Question 11 */
 /* Assume role table has rows for singer as a role  */
-
 WITH AWARD_WINNING_SINGERS AS (SELECT A.PersonID,A.Year FROM
         (SELECT Year, PersonID FROM AWARDS WHERE AwardOrganization = 'grammy' AND Winner = True AND Year IS NOT NULL) AS A
         INNER JOIN 
-        (SELECT PersonID FROM ROLE WHERE Role = 'singer') AS B
+        (SELECT PersonID FROM ROLE WHERE Role = 'Singer') AS B
         ON
         A.PersonID = B.PersonID)
 
@@ -160,3 +158,27 @@ WITH GRAMMY_WINNERS AS (
                          ROLE WHERE Role = 'Singer') AS B
                          ON A.PersonID = B.PersonID)
      SELECT DISTINCT P.PersonName, GW.Year FROM (GRAMMY_WINNERS AS GW INNER JOIN PERSON AS P ON GW.PersonID = P.PersonID) ORDER BY GW.Year;
+
+/* Question 16 */
+WITH ACTORS AS (SELECT PersonID, IsMovie FROM ROLE WHERE Role = 'Actor'),
+     MOVIE_ACTORS AS (SELECT DISTINCT PersonID FROM ACTORS WHERE IsMovie = True),
+     TV_ACTORS AS (SELECT DISTINCT PersonID FROM ACTORS WHERE IsMovie = False)
+     SELECT P.PersonName FROM
+            PERSON AS P
+            INNER JOIN
+            ((SELECT PersonID FROM MOVIE_ACTORS) INTERSECT (SELECT PersonID FROM TV_ACTORS)) AS COMMONERS
+            ON P.PersonID = COMMONERS.PersonID;
+
+/* Question 17 */
+WITH DIRO_INFO AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True AND Role = 'Director'),
+     MOVIES_2MIL AS (SELECT PictureID, PrimaryTitle, GrossBoxOffice FROM PICTURE WHERE IsMovie = True AND GrossBoxOffice >= 2000000),
+     MOVIES_WITH_GENRES AS (SELECT M2M.PictureID, M2M.PrimaryTitle, M2M.GrossBoxOffice, G.Genre FROM
+                                   MOVIES_2MIL AS M2M INNER JOIN GENRES AS G ON M2M.PictureID = G.PictureID),
+     DIRO_FOR_M2M AS (SELECT DI.PersonID, DI.PictureID FROM DIRO_INFO AS DI INNER JOIN MOVIES_2MIL AS M2M ON M2M.PictureID = DI.PictureID)
+     SELECT P.PersonName AS director, MWG.PrimaryTitle AS primarytitle, MWG.Genre AS genre, MWG.GrossBoxOffice FROM
+            MOVIES_WITH_GENRES AS MWG
+            INNER JOIN DIRO_FOR_M2M AS DFM
+            ON MWG.PictureID = DFM.PictureID
+            INNER JOIN PERSON AS P
+            ON P.PersonID = DFM.PersonID
+            ORDER BY genre;
