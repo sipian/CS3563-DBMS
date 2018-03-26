@@ -127,10 +127,44 @@ WITH MOVIE_ACTOR AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True A
             INNER JOIN PERSON AS P
             ON MWA.PersonID = P.PersonID;
 
-/*  QUESTION 11 */
+/* QUESTION 10 (Syntax Error till now, working on it*/
 
+/* Assuming new table: director_experience
+	 personid, mentorid, start year , end year //calculate duration as default value link in group
+-> assume asst.director in role table
+*/
+WITH EXPERIENCE AS ( SELECT PersonID,StartYear,EndYear FROM DIRECTOR_EXPERIENCE WHERE endYear-startYear > 5),
+	ROLES_ASSTDIR AS (SELECT * FROM ROLE WHERE Role = 'asst.director'),
+	OSCAR_WINNER_MOVIE AS (SELECT pictureid,year FROM AWARDS WHERE AwardOrganization = 'Oscar' AND IsMovie = True)
+	SELECT  RESULT2.PersonName FROM
+		(
+		SELECT FROM
+			(
+				(SELECT * FROM ROLES_ASSTDIR) AS ROLET
+				INNER JOIN
+				(SELECT * FROM OSCAR_WINNER_MOVIE) AS 	OSCART
+				ON
+				ROLET.pictureID = OSCAR.pictureID
+			) AS F
+			INNER JOIN
+			(SELECT * FROM EXPERIENCE) AS RESULTINTER
+			ON
+			RESULTINTER.PersonID = F.PersonID
+			WHERE
+			RESULTINTER.startYear <= F.year
+			AND
+			RESULTINTER.endYear >= F.year			
+		) AS RESULT1
+		INNER JOIN
+		(
+		SELECT PersonName,PersonID FROM PERSON
+		) AS RESULT2
+		ON
+		RESULT1.PersonID = RESULT2.PersonID;
+
+
+/* Question 11 */
 /* Assume role table has rows for singer as a role  */
-
 WITH AWARD_WINNING_SINGERS AS (SELECT A.PersonID,A.Year FROM
         (SELECT Year, PersonID FROM AWARDS WHERE LOWER(AwardOrganization) = 'grammy' AND Winner = True AND Year IS NOT NULL) AS A
         INNER JOIN 
@@ -174,3 +208,29 @@ WITH MOVIES AS (SELECT * FROM PICTURE WHERE IsMovie = True),
     MOVIES WHERE (StartYear, GrossBoxOffice) IN (SELECT * FROM MAX_GROSS_BOX) ORDER BY StartYear) AS B
     ON A.StartYear = B.StartYear
     )
+
+
+/* Question 16 */
+WITH ACTORS AS (SELECT PersonID, IsMovie FROM ROLE WHERE Role = 'Actor'),
+     MOVIE_ACTORS AS (SELECT DISTINCT PersonID FROM ACTORS WHERE IsMovie = True),
+     TV_ACTORS AS (SELECT DISTINCT PersonID FROM ACTORS WHERE IsMovie = False)
+     SELECT P.PersonName FROM
+            PERSON AS P
+            INNER JOIN
+            ((SELECT PersonID FROM MOVIE_ACTORS) INTERSECT (SELECT PersonID FROM TV_ACTORS)) AS COMMONERS
+            ON P.PersonID = COMMONERS.PersonID;
+
+
+/* Question 17 */
+WITH DIRO_INFO AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True AND Role = 'Director'),
+     MOVIES_2MIL AS (SELECT PictureID, PrimaryTitle, GrossBoxOffice FROM PICTURE WHERE IsMovie = True AND GrossBoxOffice >= 2000000),
+     MOVIES_WITH_GENRES AS (SELECT M2M.PictureID, M2M.PrimaryTitle, M2M.GrossBoxOffice, G.Genre FROM
+                                   MOVIES_2MIL AS M2M INNER JOIN GENRES AS G ON M2M.PictureID = G.PictureID),
+     DIRO_FOR_M2M AS (SELECT DI.PersonID, DI.PictureID FROM DIRO_INFO AS DI INNER JOIN MOVIES_2MIL AS M2M ON M2M.PictureID = DI.PictureID)
+     SELECT P.PersonName AS director, MWG.PrimaryTitle AS primarytitle, MWG.Genre AS genre, MWG.GrossBoxOffice FROM
+            MOVIES_WITH_GENRES AS MWG
+            INNER JOIN DIRO_FOR_M2M AS DFM
+            ON MWG.PictureID = DFM.PictureID
+            INNER JOIN PERSON AS P
+            ON P.PersonID = DFM.PersonID
+            ORDER BY genre;
