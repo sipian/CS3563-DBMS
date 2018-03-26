@@ -234,3 +234,11 @@ WITH DIRO_INFO AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True AND
             INNER JOIN PERSON AS P
             ON P.PersonID = DFM.PersonID
             ORDER BY genre;
+
+/* Question 18 */
+SELECT PCG.CompanyName AS production_company, COUNT(*) AS numberofmovies FROM
+       (PRODUCTION_COMPANY AS PC INNER JOIN GENRES AS G ON PC.PictureID = G.PictureID) AS PCG
+       GROUP BY (PCG.CompanyID, PCG.CompanyName)
+       HAVING COUNT(*) > 10
+       ORDER BY COUNT(*) DESC
+       LIMIT 10;
