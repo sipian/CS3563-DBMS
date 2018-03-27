@@ -39,7 +39,7 @@ create table director_experience (
 	EndYear  real CHECK (EndYear >= 0)
 );
 
-create table awards(
+create table awards (
 	AwardID varchar(25) NOT NULL,
 	AwardName varchar NOT NULL,
 	AwardOrganization varchar NOT NULL,

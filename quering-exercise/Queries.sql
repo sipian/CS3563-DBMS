@@ -171,7 +171,7 @@ WITH AWARD_WINNING_SINGERS AS (SELECT A.PersonID,A.Year FROM
 WITH GRAMMY_WINNERS AS (
                         SELECT A.PersonID, A.Year FROM
                         (SELECT PersonID, Year FROM
-                         AWARDS WHERE Winner = True AND AwardOrganization = 'grammy') AS A
+                         AWARDS WHERE Winner = True AND LOWER(AwardOrganization) = 'grammy') AS A
                          INNER JOIN
                         (SELECT DISTINCT PersonID FROM
                          ROLE WHERE Role = 'Singer') AS B
