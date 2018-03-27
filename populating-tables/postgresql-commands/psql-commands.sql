@@ -13,7 +13,7 @@ create table picture (
 	PictureID char(9) primary key,
 	IsMovie bool DEFAULT TRUE,
 	PrimaryTitle varchar,
-	ReleaseTitle varchar ,
+	ReleaseTitle varchar,
 	Adult bool DEFAULT FALSE,
 	StartYear real CHECK (StartYear >= 0),
 	EndYear  real CHECK (EndYear >= 0),
@@ -36,21 +36,21 @@ create table director_experience (
 	PersonID char(9) references person(PersonID) ON DELETE CASCADE ON UPDATE CASCADE,
 	MentorID char(9) references person(PersonID) ON DELETE CASCADE ON UPDATE CASCADE,
 	StartYear real CHECK (StartYear >= 0),
-	EndYear  real CHECK (EndYear >= 0)	
+	EndYear  real CHECK (EndYear >= 0)
 );
 
 create table awards(
 	AwardID varchar(25) NOT NULL,
-	AwardName varchar NOT NULL, 
-	AwardOrganization varchar NOT NULL, 
-	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, 
-	PersonID char(9) references person(PersonID) ON DELETE CASCADE ON UPDATE CASCADE, 
-	Winner bool DEFAULT FALSE, 
+	AwardName varchar NOT NULL,
+	AwardOrganization varchar NOT NULL,
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
+	PersonID char(9) references person(PersonID) ON DELETE CASCADE ON UPDATE CASCADE,
+	Winner bool DEFAULT FALSE,
 	Year int CHECK(Year >= 0)
 );
 
 create table languages ( 
-	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE, 
+	PictureID char(9) references picture(PictureID) ON DELETE CASCADE ON UPDATE CASCADE,
 	Language varchar(75) DEFAULT 'English'
 );
 
