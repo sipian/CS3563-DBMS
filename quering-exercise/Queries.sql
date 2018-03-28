@@ -89,7 +89,7 @@ WITH GENRE_JOIN AS (SELECT PICINFO.PictureID, PICINFO.PrimaryTitle, PICINFO.IsMo
 /* Question 8 */
 WITH DURATION_TABLE AS (SELECT PictureID, PrimaryTitle, COALESCE(EndYear::real, 2018)-StartYear Duration FROM
                                PICTURE WHERE StartYear IS NOT NULL AND IsMovie = False)
-     SELECT PrimaryTitle FROM DURATION_TABLE ORDER BY Duration DESC LIMIT 1
+     SELECT PrimaryTitle, Duration FROM DURATION_TABLE ORDER BY Duration DESC LIMIT 1;
 
 /* Question 9 */
 WITH MOVIE_ACTOR AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True AND Role = 'Actor'),
@@ -118,15 +118,15 @@ WITH MOVIE_ACTOR AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True A
             INNER JOIN PERSON AS P
             ON MWA.PersonID = P.PersonID;
 
-/* Question 10 (Syntax Error till now, working on it*/
+/* Question 10 */
 
 /* Assuming new table: director_experience
      personid, mentorid, start year , end year //calculate duration as default value link in group
 -> assume asst.director in role table
 */
-WITH EXPERIENCE AS ( SELECT PersonID,StartYear,EndYear FROM DIRECTOR_EXPERIENCE WHERE endYear-startYear > 5),
+WITH EXPERIENCE AS ( SELECT PersonID, StartYear, EndYear FROM DIRECTOR_EXPERIENCE WHERE endYear - startYear > 5),
     ROLES_ASSTDIR AS (SELECT * FROM ROLE WHERE Role = 'asst.director' and IsMovie = True),
-    OSCAR_WINNER_MOVIE AS (SELECT pictureid,year FROM AWARDS WHERE AwardOrganization = 'Oscar' AND Winner = True)
+    OSCAR_WINNER_MOVIE AS (SELECT pictureid,year FROM AWARDS WHERE LOWER(AwardOrganization) = 'oscar' AND Winner = True)
     SELECT  RESULT2.PersonName FROM
         (SELECT F.personID FROM
             ((SELECT * FROM ROLES_ASSTDIR) AS ROLET
@@ -144,7 +144,7 @@ WITH EXPERIENCE AS ( SELECT PersonID,StartYear,EndYear FROM DIRECTOR_EXPERIENCE 
             AND
             RESULTINTER.endYear >= F.year
         ) AS RESULT1
-       	INNER JOIN
+        INNER JOIN
         (SELECT PersonName,PersonID FROM PERSON) AS RESULT2
         ON
         RESULT1.PersonID = RESULT2.PersonID;
@@ -170,7 +170,7 @@ WITH AWARD_WINNING_SINGERS AS (SELECT A.PersonID,A.Year FROM
 WITH GRAMMY_WINNERS AS (
                         SELECT A.PersonID, A.Year FROM
                         (SELECT PersonID, Year FROM
-                         AWARDS WHERE Winner = True AND AwardOrganization = 'grammy') AS A
+                         AWARDS WHERE Winner = True AND LOWER(AwardOrganization) = 'grammy') AS A
                          INNER JOIN
                         (SELECT DISTINCT PersonID FROM
                          ROLE WHERE Role = 'Singer') AS B
@@ -196,7 +196,28 @@ WITH MOVIES AS (SELECT * FROM PICTURE WHERE IsMovie = True),
                 (SELECT StartYear, PrimaryTitle, GrossBoxOffice FROM
                  MOVIES WHERE (StartYear, GrossBoxOffice) IN (SELECT * FROM MAX_GROSS_BOX) ORDER BY StartYear) AS B
                  ON A.StartYear = B.StartYear
-           )
+           );
+
+/* Question 14 */
+WITH TVEPIS AS (SELECT PictureID, ParentPicture, SeasonNumber, EpisodeNumber FROM
+                         PICTURE WHERE IsMovie = False AND ParentPicture IS NOT NULL),
+     TVSERIES_NAMES AS (SELECT PictureID, PrimaryTitle FROM PICTURE WHERE IsMovie = False AND ParentPicture IS NULL),
+     TVEPIS_RATINGS AS (SELECT
+                        TVS.PictureID AS PictureID,
+                        TVS.ParentPicture AS ParentPicture,
+                        TVS.SeasonNumber AS SeasonNumber,
+                        TVS.EpisodeNumber AS EpisodeNumber,
+                        RATS.averageRating AS averageRating
+                        FROM TVEPIS AS TVS INNER JOIN RATING AS RATS ON TVS.PictureID = RATS.PictureID)
+     SELECT TSN.PrimaryTitle, SERIESRATS.minseasonrating AS minimumaveragerating FROM
+            (SELECT TVS.SeriesID as SeriesID, MIN(TVS.averageSeasonRating) AS minseasonrating FROM
+                 (SELECT TVR.ParentPicture as SeriesID,
+                         TVR.SeasonNumber as SeriesSeason,
+                         AVG(TVR.averageRating) AS averageSeasonRating FROM
+                         TVEPIS_RATINGS AS TVR GROUP BY (TVR.ParentPicture, TVR.SeasonNumber)) AS TVS
+                 GROUP BY TVS.SeriesID HAVING MIN(TVS.averageSeasonRating) > 7.5) AS SERIESRATS
+            INNER JOIN
+            TVSERIES_NAMES AS TSN ON TSN.PictureID = SERIESRATS.SeriesID;
 
 /* Question 15 */
 /* Our data did not have crew members for The Fault In Our Stars, hence we are using The Red Orchestra*/
@@ -219,7 +240,6 @@ WITH ACTORS AS (SELECT PersonID, IsMovie FROM ROLE WHERE Role = 'Actor'),
             INNER JOIN
             ((SELECT PersonID FROM MOVIE_ACTORS) INTERSECT (SELECT PersonID FROM TV_ACTORS)) AS COMMONERS
             ON P.PersonID = COMMONERS.PersonID;
-
 
 /* Question 17 */
 WITH DIRO_INFO AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True AND Role = 'Director'),
@@ -278,11 +298,11 @@ WITH DIR_MOVIES AS (SELECT * FROM ROLE WHERE IsMovie = True AND Role = 'Director
     SELECT PersonName, avg_rating, movie_count, score FROM
            (
             (SELECT NUM_MOVIES.personID, avg_rating, movie_count, 0.2*movie_count+0.8*avg_rating AS score FROM
-        	AVG_RATINGS 
+            AVG_RATINGS 
             INNER JOIN
-        	NUM_MOVIES
-        	ON NUM_MOVIES.PersonID = AVG_RATINGS.PersonID) AS RESULT1
-        	INNER JOIN
-        	(SELECT PersonName,PersonID FROM PERSON) AS RESULT2
-        	ON RESULT1.PersonID = RESULT2.PersonID
+            NUM_MOVIES
+            ON NUM_MOVIES.PersonID = AVG_RATINGS.PersonID) AS RESULT1
+            INNER JOIN
+            (SELECT PersonName,PersonID FROM PERSON) AS RESULT2
+            ON RESULT1.PersonID = RESULT2.PersonID
            );
