@@ -92,7 +92,6 @@ WITH DURATION_TABLE AS (SELECT PictureID, PrimaryTitle, COALESCE(EndYear::real, 
      SELECT PrimaryTitle FROM DURATION_TABLE ORDER BY Duration DESC LIMIT 1
 
 /* Question 9 */
-/* Assumption: Interpretation of award winning actor as an actor who has won any award for movies */
 WITH MOVIE_ACTOR AS (SELECT PersonID, PictureID FROM ROLE WHERE IsMovie = True AND Role = 'Actor'),
      AWARD_WINNING_ACTOR AS (SELECT A.PersonID, A.PictureID FROM
                                 (SELECT PersonID, PictureID FROM MOVIE_ACTOR
