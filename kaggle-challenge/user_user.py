@@ -1,32 +1,16 @@
-# normalized_mean queries
-# cur.execute("select userid, AVG(rating) into user_average_ratings from final_ratings group by userid;")
-# cur.execute("select final_ratings.userid, final_ratings.profileid, final_ratings.rating-user_average_ratings.avg from final_ratings INNER JOIN user_average_ratings on final_ratings.userid = user_average_ratings.userid;")
-import psycopg2
+import os
 import sys
+import psycopg2
+import threading
 import numpy as np
 import pandas as pd
 import scipy.spatial as ssp
 import multiprocessing as mp
 
-no_of_process = 4
-test_data = pd.read_csv("./data/test_user_ratings.csv")
-unique_items = np.array(list(set(test_data["ForUserId"])))
+from threading import Thread
+from multiprocessing import Process
 
-def _get_individual_info(userid, cur, total=220969):
-    """
-    Gets a rating-hot-vector for a given user id from a pool of items
-    """
-    # Assume the data frame is in Pandas for now, named "cur_db"
-
-    # req = cur_db.loc[cur_db['UserId'] == userid, ['ForUserId', 'Rating']]
-    # idxs = req['ForUserId'].tolist()
-    # rats = req['Rating'].tolist()
-
-    cur.execute("SELECT ProfileID, Rating FROM ratings WHERE userid = "+str(userid)+";")
-    rows = cur.fetchall()
-    rows = np.array([list(i) for i in rows])
-    idxs = rows[:,1]
-    rats = rows[:,2]
+no_of_thread = 4
 
 def _get_individual_info(userid, dist, total):
     """
@@ -50,36 +34,8 @@ def get_batch_info(userids, dist='cosine', total=220971):
     """
     batch_matrix = np.zeros((len(userids), total))
     for i, uid in enumerate(userids):
-        batch_matrix[i] = _get_individual_info(uid, cur, total)
+        batch_matrix[i] = _get_individual_info(uid, dist, total)
     return batch_matrix
-
-def jobHandler(i, total=220969):
-    global noOfProcess
-    conn = psycopg2.connect("dbname=friendship user=postgres password=postgres")
-    curr = conn.cursor()
-    batch_size = total/noOfProcess
-
-    start_index = (int)(i*batch_size + 1)
-
-    if i == noOfProcess-1:
-        end_index = total + 1
-    else:
-        end_index = (i+1)*batch_size + 1
-    end_index = (int)(end_index)
-
-    print("Process {} : {} - {}".format(i, start_index, end_index))
-    userids = np.arange(start_index, end_index)
-    return get_batch_info(userids , curr)
-
-
-pool = mp.Pool(processes=noOfProcess)
-results = [pool.apply(handleProcess, args=(i,)) for i in range(0,noOfProcess)]
-
-output = [p.get() for p in results]
-print(output.size())
-
-
-print(_get_individual_info(23408,cur))
 
 def similarity_batch_individual(batch_userids, given_userid, dist='cosine', total=220971):
     """
@@ -131,26 +87,60 @@ def get_users_for_item(given_itemid):
     """
     return te_data.loc[te_data['ForUserId'] == given_itemid, 'UserId'].tolist()  # TODO: PostgreSQL
 
-def get_all_predictions(start=0, end=-1):
+
+def get_predictions_per_thread(start, end):
     """
-    This is where it begins, and ends
+    Get Predictions per thread 
     """
-    unique_items = te_data.groupby(['ForUserId'])['UserId'].count().sort_values().index 
-    end_ = end if end != -1 else len(unique_items)
-    unique_items = unique_items[start:end_]
-    predictions = None
+    print("Started thread for Process {} ==> Thread range {} - {}".format(os.getpid(), start, end))
+    unique_items = sorted_unique_items[start:end]
     for uitem in unique_items:
         te_users = get_users_for_item(uitem)
         batch_prediction = predict_batch(te_users, uitem)
         pd.DataFrame(data=batch_prediction, columns=['UserId', 'ForUserId', 'Rating']).to_csv('./FILES/item={}.csv'.format(uitem), index=False, header=False)
+    print("Completed thread for Process {} ==> Thread range {} - {}".format(os.getpid(), start, end))
+
+def spawn_threads(start, end):
+    """
+    Spawn no_of_thread threads and predict
+    """
+    batch_size = (end - start) / no_of_thread
+    threads = []
+    for x in range(no_of_thread):
+        end_index = end if (start + batch_size > end) else start + batch_size
+        threads.append(Thread(target=get_predictions_per_thread, args=((int)(start), (int)(end_index))))
+        threads[-1].start()
+        start += batch_size
+    
+    for x in threads:
+        x.join()
+
+def spawn_processes(batches):
+    """
+    Spawn process to later spawn threads
+    """
+    process = []
+    for s, e in batches:
+        process.append(Process(target=spawn_threads, args=(s, e)))
+        process[-1].start()
+    
+    for p in process:
+        p.join()
 
 if __name__ == '__main__':
-    s = int(sys.argv[1])
-    e = int(sys.argv[2])
-    print("Distinct items from {} to {}".format(s, e))
 
-    tr_data = pd.read_csv('train_user_ratings.csv', low_memory=False)
-    te_data = pd.read_csv('test_user_ratings.csv', low_memory=False)
+    tr_data = pd.read_csv('./data/train_user_ratings.csv', low_memory=False)
+    te_data = pd.read_csv('./data/test_user_ratings.csv', low_memory=False)
+    unique_items_count = len(list(set(te_data["ForUserId"])))
+    sorted_unique_items = te_data.groupby(['ForUserId'])['UserId'].count().sort_values().index 
 
-    vals = get_all_predictions(start=s, end=e)
-    print(vals)
+    batches = [(0,20000), (20000,36000), (36000,44000), (44000,60000), (60000,70000)]
+    batches.extend([(i, i+5000) for i in range(70000,120001,5000)])
+
+    batches = [(0,20000)]    #test
+    spawn_processes(batches)
+    print("done")
+    
+    batches.extend([(i, i+100) for i in range(120000,125001,100)])
+    batches = [(i, i+100) for i in range(125000, unique_items_count, 50)]
+    spawn_processes(batches)
