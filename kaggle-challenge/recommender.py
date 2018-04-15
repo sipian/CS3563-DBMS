@@ -4,7 +4,7 @@ conn = psycopg2.connect("dbname=friendship1 user=postgres")
 
 cur = conn.cursor()
 
-#creating and filling in the tables
+# creating and filling in the tables
 cur.execute("CREATE TABLE Ratings (	UserID integer,	ProfileID integer,	Rating integer);")
 cur.execute("CREATE TABLE Gender (	UserID integer primary key,	Gender char(1));")
 
@@ -15,6 +15,3 @@ cur.execute("COPY Gender FROM '/tmp/gender.csv' CSV delimiter ',' NULL '\\N' ENC
 conn.commit()
 cur.close()
 conn.close()
-
-
-
