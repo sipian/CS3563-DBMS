@@ -61,11 +61,11 @@ def predict_individual(given_userid, given_itemid, dist='cosine', total=220971):
     req_sim = similarity_batch_individual(userlist, given_userid, dist, total).reshape(-1)
     return np.dot(ratings, req_sim) / req_sim.sum()
 
-def predict_batch(given_userids, given_itemid, dist='cosine', total=220971):
+def predict_batch(given_userids, given_itemid, dist='cosine', total=220971, max_rows=25):
     """
     Predicts the value for a list of pairs [(u1, i), (u2, i), (u3, i), ..., (un, i)]
     """
-    req_users = tr_data.loc[tr_data['ForUserId'] == given_itemid, ['UserId', 'Rating']]
+    req_users = tr_data.loc[tr_data['ForUserId'] == given_itemid, ['UserId', 'Rating']].head(max_rows)
     userlist = req_users['UserId'].tolist()
     ratings = np.array(req_users['Rating'].tolist())
     req_sim = similarity_batch_batch(userlist, given_userids, dist, total)
