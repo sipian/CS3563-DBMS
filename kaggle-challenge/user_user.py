@@ -94,10 +94,11 @@ def get_predictions_per_process(start, end):
     """
     print("Started Process {} ==> Range {} - {}".format(os.getpid(), start, end))
     unique_items = sorted_unique_items[start:end]
-    for uitem in unique_items:
+    for index, uitem in enumerate(unique_items):
         te_users = get_users_for_item(uitem)
         batch_prediction = predict_batch(te_users, uitem)
         pd.DataFrame(data=batch_prediction, columns=['UserId', 'ForUserId', 'Rating']).to_csv('./FILES/item={}.csv'.format(uitem), index=False, header=False)
+        print("get_predictions_per_process :: ", )
     print("Completed Process {} ==> Range {} - {}".format(os.getpid(), start, end))
 
 # def spawn_threads(start, end):
@@ -134,20 +135,22 @@ if __name__ == '__main__':
     unique_items_count = len(list(set(te_data["ForUserId"])))
     sorted_unique_items = te_data.groupby(['ForUserId'])['UserId'].count().sort_values().index 
 
-    print("Find value from 0 - 100000 in batch size of 2500")
-    batches = [(i, i+2500) for i in range(0,100001,2500)]
-    spawn_processes(batches)
+    batches = [(0, 2500)]
+    spawn_processes(batches);
+    # print("Find value from 0 - 100000 in batch size of 2500")
+    # batches = [(i, i+2500) for i in range(0,100001,2500)]
+    # spawn_processes(batches)
 
-    print("Find value from 120000 - 125000 in batch size of 2500")
-    batches = [(i, i+2500) for i in range(120000,125001,2500)]
-    spawn_processes(batches)
+    # print("Find value from 120000 - 125000 in batch size of 2500")
+    # batches = [(i, i+2500) for i in range(120000,125001,2500)]
+    # spawn_processes(batches)
 
-    print("Find value from 125000 - 127000 in batch size of 500")
-    batches = [(i, i+500) for i in range(125000,127001,500)]
-    spawn_processes(batches)
+    # print("Find value from 125000 - 127000 in batch size of 500")
+    # batches = [(i, i+500) for i in range(125000,127001,500)]
+    # spawn_processes(batches)
 
-    print("Find value from 127000 - {} in batch size of 100".format(unique_items_count))
-    batches = [(i, i+100) for i in range(127000,unique_items_count,100)]
-    spawn_processes(batches)
+    # print("Find value from 127000 - {} in batch size of 100".format(unique_items_count))
+    # batches = [(i, i+100) for i in range(127000,unique_items_count,100)]
+    # spawn_processes(batches)
     
     print("Done")                        
