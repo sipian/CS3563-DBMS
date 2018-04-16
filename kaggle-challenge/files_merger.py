@@ -20,7 +20,7 @@ cur.execute("CREATE TABLE Merged_Test_Ratings (UserID integer,	ForUserID integer
 cur.execute("COPY Merged_Test_Ratings FROM '" + path_to_merged_file + "' CSV delimiter ',' NULL '\\N' ENCODING 'unicode' header;")
 
 cur.execute("SELECT Merged_Test_Ratings.Rating as Rating INTO final_ratings FROM Test_Ratings INNER JOIN Merged_Test_Ratings ON Test_Ratings.userid = Merged_Test_Ratings.userid;")
-cur.execute("COPY final_ratings to " + result_pathname + " CSV DELIMITER \',\' ")
+cur.execute("COPY final_ratings TO " + result_pathname + " CSV DELIMITER \',\';")
 conn.commit()
 cur.close()
 conn.close()
