@@ -88,32 +88,32 @@ def get_users_for_item(given_itemid):
     return te_data.loc[te_data['ForUserId'] == given_itemid, 'UserId'].tolist()  # TODO: PostgreSQL
 
 
-def get_predictions_per_thread(start, end):
+def get_predictions_per_process(start, end):
     """
     Get Predictions per thread 
     """
-    print("Started thread for Process {} ==> Thread range {} - {}".format(os.getpid(), start, end))
+    print("Started Process {} ==> Range {} - {}".format(os.getpid(), start, end))
     unique_items = sorted_unique_items[start:end]
     for uitem in unique_items:
         te_users = get_users_for_item(uitem)
         batch_prediction = predict_batch(te_users, uitem)
         pd.DataFrame(data=batch_prediction, columns=['UserId', 'ForUserId', 'Rating']).to_csv('./FILES/item={}.csv'.format(uitem), index=False, header=False)
-    print("Completed thread for Process {} ==> Thread range {} - {}".format(os.getpid(), start, end))
+    print("Completed Process {} ==> Range {} - {}".format(os.getpid(), start, end))
 
-def spawn_threads(start, end):
-    """
-    Spawn no_of_thread threads and predict
-    """
-    batch_size = (end - start) / no_of_thread
-    threads = []
-    for x in range(no_of_thread):
-        end_index = end if (start + batch_size > end) else start + batch_size
-        threads.append(Thread(target=get_predictions_per_thread, args=((int)(start), (int)(end_index))))
-        threads[-1].start()
-        start += batch_size
+# def spawn_threads(start, end):
+#     """
+#     Spawn no_of_thread threads and predict
+#     """
+#     batch_size = (end - start) / no_of_thread
+#     threads = []
+#     for x in range(no_of_thread):
+#         end_index = end if (start + batch_size > end) else start + batch_size
+#         threads.append(Thread(target=get_predictions_per_thread, args=((int)(start), (int)(end_index))))
+#         threads[-1].start()
+#         start += batch_size
     
-    for x in threads:
-        x.join()
+#     for x in threads:
+#         x.join()
 
 def spawn_processes(batches):
     """
@@ -121,7 +121,7 @@ def spawn_processes(batches):
     """
     process = []
     for s, e in batches:
-        process.append(Process(target=spawn_threads, args=(s, e)))
+        process.append(Process(target=get_predictions_per_process, args=(s, e)))
         process[-1].start()
     
     for p in process:
@@ -134,13 +134,20 @@ if __name__ == '__main__':
     unique_items_count = len(list(set(te_data["ForUserId"])))
     sorted_unique_items = te_data.groupby(['ForUserId'])['UserId'].count().sort_values().index 
 
-    batches = [(0,20000), (20000,36000), (36000,44000), (44000,60000), (60000,70000)]
-    batches.extend([(i, i+5000) for i in range(70000,120001,5000)])
+    print("Find value from 0 - 100000 in batch size of 2500")
+    batches = [(i, i+2500) for i in range(0,100001,2500)]
+    spawn_processes(batches)
 
-    batches = [(0,20000)]    #test
+    print("Find value from 120000 - 125000 in batch size of 2500")
+    batches = [(i, i+2500) for i in range(120000,125001,2500)]
     spawn_processes(batches)
-    print("done")
+
+    print("Find value from 125000 - 127000 in batch size of 500")
+    batches = [(i, i+500) for i in range(125000,127001,500)]
+    spawn_processes(batches)
+
+    print("Find value from 127000 - {} in batch size of 100".format(unique_items_count))
+    batches = [(i, i+100) for i in range(127000,unique_items_count,100)]
+    spawn_processes(batches)
     
-    batches.extend([(i, i+100) for i in range(120000,125001,100)])
-    batches = [(i, i+100) for i in range(125000, unique_items_count, 50)]
-    spawn_processes(batches)
+    print("Done")                        
