@@ -8,8 +8,9 @@ path_to_merged_file = ""
 test_dataset_filename = ""
 result_pathname = ""
 
-os.system(" cat  cat * >> final_result.csv")
-os.system("cat \"UserId,ForUserId,Rating\" final_result.csv >> final_result.csv")
+os.system(" cat item* >> result.csv")
+os.system(" echo \"UserId,ForUserId,Rating\" > result_header.csv")
+os.system("cat result_header.csv result.csv >> final_result.csv")
 
 print("Done with concatenation")
 
