@@ -18,18 +18,20 @@ cur.execute("CREATE TABLE Ratings ( UserID integer, ProfileID integer,  Rating i
 cur.execute("CREATE TABLE IF NOT EXISTS Gender (  UserID integer primary key, Gender char(1));")
 # for now, ratings is filled as from the training data
 print("Write to database")
-cur.execute("COPY Ratings FROM '/home/harsh/btech/sem-6/CS3563-DBMS/kaggle-challenge/train_user_ratings.csv' CSV delimiter ',' NULL '\\N' ENCODING 'unicode' header;")
+cur.execute("COPY Ratings FROM 'train_user_ratings.csv' CSV delimiter ',' NULL '\\N' ENCODING 'unicode' header;")
 
 print("Fetching from database")
 cur.execute("SELECT *  FROM Ratings")
 rows = cur.fetchall()
 
-tr_data = np.array([list(elem) for elem in rows])
-tr_data = pd.DataFrame(data = tr_data, columns=["UserId","ForUserId","Rating"]) 
-te_data = pd.read_csv('/home/harsh/btech/sem-6/CS3563-DBMS/kaggle-challenge/test_user_ratings_2.csv', low_memory=False)
+np_test_data = np.array([list(elem) for elem in rows])
+tr_data = pd.DataFrame(data = np_test_data, columns=["UserId","ForUserId","Rating"]) 
+del np_test_data, rows   #free memory
 
-print(tr_data)
+te_data = pd.read_csv('test_user_ratings.csv', low_memory=False)
+
 print("Created Dataframes")
+
 conn.commit()
 cur.close()
 conn.close()
@@ -58,9 +60,8 @@ def predict():
 
     for i, u in enumerate(unique_items):
         vals.append(get_details_for_users(u))
-        if i % 500 == 499:
-            print("Booyah : {}".format(i))
     vals = np.array(vals).clip(min=1, max=10)
+    vals = np.around(vals, 0).astype(int)
 
     global final_ratings
     final_ratings = np.hstack([unique_items.reshape(-1, 1), vals.reshape(-1, 1)])
@@ -73,7 +74,7 @@ def get_results():
 
     final = te_data.merge(pd.DataFrame(final_ratings, columns=['ForUserId', 'Rating']),
                           how='left', on=['ForUserId'])
-    final.loc['Rating'].to_csv('output-{}.csv'.format(GROUP_ID), index=False, header='Rating')
+    final['Rating'].to_csv('output-{}.csv'.format(GROUP_ID), index=False, header='Rating')
 
 if __name__ == '__main__':
     get_results()
