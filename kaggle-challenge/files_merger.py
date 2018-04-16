@@ -8,9 +8,8 @@ path_to_merged_file = ""
 test_dataset_filename = ""
 result_pathname = ""
 
-os.system(" cat item* >> result.csv")
-os.system(" echo \"UserId,ForUserId,Rating\" > result_header.csv")
-os.system("cat result_header.csv result.csv >> final_result.csv")
+os.system(" cat  cat * >> final_result.csv")
+os.system("cat \"UserId,ForUserId,Rating\" final_result.csv >> final_result.csv")
 
 print("Done with concatenation")
 
@@ -20,7 +19,7 @@ cur.execute("COPY Test_Ratings FROM '" + test_dataset_filename + "' CSV delimite
 cur.execute("CREATE TABLE Merged_Test_Ratings (UserID integer,	ForUserID integer, Rating Integer);")
 cur.execute("COPY Merged_Test_Ratings FROM '" + path_to_merged_file + "' CSV delimiter ',' NULL '\\N' ENCODING 'unicode' header;")
 
-cur.execute("SELECT Merged_Test_Ratings INTO final_ratings FROM Test_Ratings INNER JOIN Merged_Test_Ratings ON Test_Ratings.userid = Merged_Test_Ratings.userid;")
+cur.execute("SELECT Merged_Test_Ratings.Rating as Rating INTO final_ratings FROM Test_Ratings INNER JOIN Merged_Test_Ratings ON Test_Ratings.userid = Merged_Test_Ratings.userid;")
 cur.execute("COPY final_ratings to " + result_pathname + " CSV DELIMITER \',\' ")
 conn.commit()
 cur.close()
