@@ -28,9 +28,8 @@ def predict():
 
     for i, u in enumerate(unique_items):
         vals.append(get_details_for_users(u))
-        if i % 500 == 499:
-            print("Booyah : {}".format(i))
     vals = np.array(vals).clip(min=1, max=10)
+    vals = np.around(vals, 0).astype(int)
 
     global final_ratings
     final_ratings = np.hstack([unique_items.reshape(-1, 1), vals.reshape(-1, 1)])
@@ -43,7 +42,7 @@ def get_results():
 
     final = te_data.merge(pd.DataFrame(final_ratings, columns=['ForUserId', 'Rating']),
                           how='left', on=['ForUserId'])
-    final.loc['Rating'].to_csv('user-user-hybrid.csv', index=False, header='Rating')
+    final['Rating'].to_csv('user-user-hybrid.csv', index=False, header='Rating')
 
 if __name__ == '__main__':
     get_results()
