@@ -1,10 +1,10 @@
 import sys
 import numpy as np
 import pandas as pd
-import multiprocessing as mp
+import threading
 
-tr_data = pd.read_csv('../train_user_ratings.csv', low_memory=False)
-te_data = pd.read_csv('../test_user_ratings.csv', low_memory=False)
+tr_data = pd.read_csv('./train_user_ratings.csv', low_memory=False)
+te_data = pd.read_csv('./test_user_ratings.csv', low_memory=False)
 
 item_information = None
 user_information = None
@@ -67,12 +67,12 @@ def make_information_ready():
     print("Inside make information ready")
     get_user_item_information()
 
-    p1 = mp.Process(target=get_item_links)
-    p2 = mp.Process(target=get_user_links)
-    p1.start()
-    p2.start()
-    p1.join()
-    p2.join()
+    t1 = threading.Thread(target=get_item_links)
+    t2 = threading.Thread(target=get_user_links)
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
 
 def predict(target_type):
     global vals
@@ -96,7 +96,7 @@ def get_results(target_type='int'):
     predict(target_type)
     print("Done")
 
-    np.savetxt(fname='relation-user-user.csv', X=vals, header='Rating')
+    np.savetxt(fname='relation-user-user.csv', X=vals, fmt='%d', header='Rating', comments='')
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
