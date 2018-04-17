@@ -1,10 +1,40 @@
 import sys
+import csv
+import time
+import psycopg2
 import numpy as np
 import pandas as pd
-import threading
 
-tr_data = pd.read_csv('./train_user_ratings.csv', low_memory=False)
-te_data = pd.read_csv('./test_user_ratings.csv', low_memory=False)
+start = time.time()
+
+GROUP_ID = "group2"
+
+conn = psycopg2.connect("dbname=friendship user=postgres password=postgres")
+cur = conn.cursor()
+
+# creating and filling in the tables
+cur.execute("DROP TABLE IF EXISTS Ratings;")
+cur.execute("CREATE TABLE Ratings ( UserID integer, ProfileID integer,  Rating integer);")
+cur.execute("CREATE TABLE IF NOT EXISTS Gender (  UserID integer primary key, Gender char(1));")
+# for now, ratings is filled as from the training data
+print("Write to database")
+cur.execute("COPY Ratings FROM 'train_user_ratings.csv' CSV delimiter ',' NULL '\\N' ENCODING 'unicode' header;")
+
+print("Fetching from database")
+cur.execute("SELECT *  FROM Ratings")
+rows = cur.fetchall()
+
+np_test_data = np.array([list(elem) for elem in rows])
+tr_data = pd.DataFrame(data = np_test_data, columns=["UserId","ForUserId","Rating"]) 
+del np_test_data, rows   #free memory
+
+te_data = pd.read_csv('test_user_ratings.csv', low_memory=False)
+
+print("Created Dataframes")
+
+conn.commit()
+cur.close()
+conn.close()
 
 item_information = None
 user_information = None
@@ -48,8 +78,6 @@ def get_item_links():
     for iid in unique_items:
         avg_rat, cnt = get_details_for_items(iid)
         item_links[iid] = (avg_rat, cnt)
-        if len(item_links) % 1000 == 0:
-            print("1000-i")
     print("Done gathering item information")
 
 def get_user_links():
@@ -59,8 +87,6 @@ def get_user_links():
     for uid in unique_users:
         avg_rat, cnt = get_details_for_users(uid)
         user_links[uid] = (avg_rat, cnt)
-        if len(user_links) % 1000 == 0:
-            print("1000-u")
     print("Done gathering user information")
 
 def make_information_ready():
@@ -96,10 +122,14 @@ def get_results(target_type='int'):
     predict(target_type)
     print("Done")
 
-    np.savetxt(fname='relation-user-user.csv', X=vals, fmt='%d', header='Rating', comments='')
+    np.savetxt(fname='relation-output-{}.csv'.format(GROUP_ID), X=vals, fmt='%d', header='Rating', comments='')
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         get_results('int')
     else:
         get_results(sys.argv[1])
+    end = time.time()
+    with open('time.csv', 'a') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow([GROUP_ID, str(end - start)])
