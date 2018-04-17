@@ -5,7 +5,7 @@ import psycopg2
 import numpy as np
 import pandas as pd
 
-start = time .time()
+start = time.time()
 
 GROUP_ID = "group2"
 
@@ -18,7 +18,7 @@ cur.execute("CREATE TABLE Ratings ( UserID integer, ProfileID integer,  Rating i
 cur.execute("CREATE TABLE IF NOT EXISTS Gender (  UserID integer primary key, Gender char(1));")
 # for now, ratings is filled as from the training data
 print("Write to database")
-cur.execute("COPY Ratings FROM '/home/harsh/btech/sem-6/CS3563-DBMS/kaggle-challenge/submission/train_user_ratings.csv' CSV delimiter ',' NULL '\\N' ENCODING 'unicode' header;")
+cur.execute("COPY Ratings FROM 'train_user_ratings.csv' CSV delimiter ',' NULL '\\N' ENCODING 'unicode' header;")
 
 print("Fetching from database")
 cur.execute("SELECT *  FROM Ratings")
@@ -28,7 +28,7 @@ np_test_data = np.array([list(elem) for elem in rows])
 tr_data = pd.DataFrame(data = np_test_data, columns=["UserId","ForUserId","Rating"]) 
 del np_test_data, rows   #free memory
 
-te_data = pd.read_csv('/home/harsh/btech/sem-6/CS3563-DBMS/kaggle-challenge/submission/test_user_ratings_2.csv', low_memory=False)
+te_data = pd.read_csv('test_user_ratings.csv', low_memory=False)
 
 print("Created Dataframes")
 
@@ -74,13 +74,13 @@ def get_results():
 
     final = te_data.merge(pd.DataFrame(final_ratings, columns=['ForUserId', 'Rating']),
                           how='left', on=['ForUserId'])
-    final['Rating'].to_csv('/home/harsh/btech/sem-6/CS3563-DBMS/kaggle-challenge/submission/hybrid-output-{}.csv'.format(GROUP_ID), index=False, header='Rating')
+    final['Rating'].to_csv('hybrid-output-{}.csv'.format(GROUP_ID), index=False, header='Rating')
 
 if __name__ == '__main__':
     get_results()
     end = time.time()
 
-    with open('/home/harsh/btech/sem-6/CS3563-DBMS/kaggle-challenge/submission/time.csv', 'a') as csvfile:
+    with open('time.csv', 'a') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow([GROUP_ID, str(end - start)])
 
