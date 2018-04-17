@@ -37,5 +37,5 @@ _We did not submit this because this was taking ~6hrs to compute and validation 
 
 #### How to run
 + Since postgres can have problem of being run by postgres user, [this](http://suite.opengeo.org/docs/latest/dataadmin/pgGettingStarted/firstconnect.html#allowing-local-connections) can be used to allow to run from normal user. 
-+ Also it is recommended to run the python program with `sudo`.
++ It is recommended to run the python program with `sudo`.
 + If there is an error message of `train_user_ratings.csv` file not found, the relative path for all the `.csv` can be changed to an absolute path in the Python code.
