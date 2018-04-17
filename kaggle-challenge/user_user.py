@@ -5,7 +5,6 @@ import numpy as np
 import pandas as pd
 import scipy.spatial as ssp
 import multiprocessing as mp
-
 from multiprocessing import Process
 
 def _get_individual_info(userid, dist, total):
@@ -115,30 +114,11 @@ def spawn_processes(batches):
 
 if __name__ == '__main__':
 
-    tr_data = pd.read_csv('./data/train_user_ratings.csv', low_memory=False)
-    te_data = pd.read_csv('./data/test_user_ratings.csv', low_memory=False)
+    tr_data = pd.read_csv('train_user_ratings.csv', low_memory=False)
+    te_data = pd.read_csv('test_user_ratings.csv', low_memory=False)
     unique_items_count = len(list(set(te_data["ForUserId"])))
     sorted_unique_items = te_data.groupby(['ForUserId'])['UserId'].count().sort_values().index 
 
-    batches = [(0, 2500)]
-    spawn_processes(batches);
-    # print("Find value from 0 - 100000 in batch size of 2500")
-    # batches = [(i, i+2500) for i in range(0,100001,2500)]
-    # spawn_processes(batches)
-
-    # print("Find value from 120000 - 125000 in batch size of 2500")
-    # batches = [(i, i+2500) for i in range(120000,125001,2500)]
-    # spawn_processes(batches)
-
-    # print("Find value from 125000 - 127000 in batch size of 500")
-    # batches = [(i, i+500) for i in range(125000,127001,500)]
-    # spawn_processes(batches)
-
-    # print("Find value from 127000 - {} in batch size of 100".format(unique_items_count))
-    # batches = [(i, i+100) for i in range(127000,unique_items_count,100)]
-    # spawn_processes(batches)
-    
-    print("Done")                        
     print("Find value from 0 - 100000 in batch size of 2500")
     batches = [(2500 * i, 2500 * (i + 1) for i in range(0, 40))]
     spawn_processes(batches)
